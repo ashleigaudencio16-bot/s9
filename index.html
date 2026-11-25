@@ -1,0 +1,1267 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101c3a">
+<meta name="description" content="S4 EDU — encontre escolas, faculdades e organize sua vida estudantil.">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="S4 EDU">
+<title>S4 EDU — Sua educação mais perto</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" onerror="this.onerror=null;this.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'">
+<style>
+:root{--navy:#101c3a;--blue:#2457e6;--cyan:#54d5e8;--ink:#172033;--muted:#667085;--paper:#f4f6fb;--line:#e4e8f0;--white:#fff}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+button,input,textarea,select{font:inherit}input,textarea,select{color:#111827!important;background-color:#fff}input::placeholder,textarea::placeholder{color:#667085;opacity:1}input:disabled{color:#475467!important;background-color:#f3f4f6}button{cursor:pointer;border:0;border-radius:12px;padding:11px 16px;font-weight:700;background:var(--blue);color:white}button.secondary{background:#eaf0ff;color:var(--blue)}button.ghost{background:transparent;color:var(--navy);border:1px solid var(--line)}button:disabled{opacity:.5;cursor:not-allowed}
+.hidden{display:none!important}.muted{color:var(--muted)}.small{font-size:12px}.wrap{max-width:1180px;margin:auto;padding:22px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:950;letter-spacing:-1.5px;font-size:25px;color:var(--navy)}.brand-mark{width:38px;height:38px;border-radius:12px;background:var(--blue);color:#fff;display:grid;place-items:center;font-weight:950;letter-spacing:-1px}
+header{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:500}.top{max-width:1180px;margin:auto;padding:13px 22px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.top-right{display:flex;align-items:center;gap:10px}.avatar{width:35px;height:35px;border-radius:50%;object-fit:cover;background:#eaf0ff;display:grid;place-items:center;color:var(--blue);font-weight:800}
+.hero{background:var(--navy);color:white;border-radius:24px;padding:30px;position:relative;overflow:hidden;margin:18px 0}.hero:after{content:"S4";position:absolute;right:22px;bottom:-38px;font-size:150px;font-weight:1000;color:#ffffff0d;letter-spacing:-12px}.hero h1{font-size:clamp(28px,5vw,48px);line-height:1.02;margin:12px 0}.hero p{color:#c9d5f2;max-width:550px}.eyebrow{font-size:11px;letter-spacing:2px;font-weight:900;color:var(--cyan)}
+.layout{display:grid;grid-template-columns:230px 1fr;gap:20px}.sidebar{background:#fff;border:1px solid var(--line);border-radius:18px;padding:12px;height:max-content;position:sticky;top:82px}.navbtn{width:100%;text-align:left;background:transparent;color:#475467;margin:3px 0;display:flex;gap:12px;align-items:center}.navbtn.active{background:#edf2ff;color:var(--blue)}.content{min-width:0}.panel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px;margin-bottom:16px}.panel h2{margin:0 0 6px;font-size:21px}.panel h3{margin:0 0 8px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{display:flex;flex-direction:column;gap:6px;margin:12px 0}.field label{font-size:13px;font-weight:750;color:#344054}.field input,.field textarea,.field select,.searchbar input{width:100%;border:1px solid #d7deea;border-radius:11px;padding:12px;background:#fff;outline:none}.field input:focus,.field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px #2457e61a}.field textarea{min-height:85px;resize:vertical}.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.between{justify-content:space-between}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.stat{padding:16px;border-radius:15px;background:#f1f5ff}.stat strong{display:block;font-size:24px;color:var(--navy)}#map{height:390px;border-radius:15px;z-index:1}.searchbar{display:flex;gap:8px}.searchbar input{flex:1;min-width:0}.school{border:1px solid var(--line);padding:14px;border-radius:14px;margin-top:10px}.school h3{font-size:16px}.school p{font-size:13px;color:var(--muted);margin:5px 0}.tag{display:inline-block;background:#eaf0ff;color:#234bc2;padding:4px 8px;border-radius:99px;font-size:11px;font-weight:800}
+ .rating-row{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin:7px 0}.star-btn{background:transparent;color:#d0d5dd;padding:2px 4px;font-size:22px;line-height:1;border-radius:6px}.star-btn.selected,.star-btn:hover{color:#e5a000}.saved-item{border:1px solid var(--line);border-radius:12px;padding:13px;margin-top:10px}.saved-item h3{margin:0 0 6px;font-size:15px}.saved-item p{white-space:pre-wrap;overflow-wrap:anywhere}.saved-item .row{margin-top:8px}
+.auth-shell{min-height:100vh;display:grid;grid-template-columns:1.05fr .95fr;background:#fff}.auth-side{background:var(--navy);color:#fff;padding:clamp(28px,6vw,75px);display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;position:relative}.auth-side:after{content:"S4 EDU";font-size:clamp(70px,12vw,170px);font-weight:1000;letter-spacing:-12px;color:#ffffff0b;position:absolute;bottom:4%;left:5%;white-space:nowrap}.auth-side p{color:#c9d5f2;max-width:450px}.auth-main{display:grid;place-items:center;padding:25px}.auth-card{width:min(100%,430px)}.auth-card h1{font-size:32px;margin:22px 0 6px}.auth-card .brand{margin-bottom:35px}.role-options{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0 16px}.role-option{position:relative;isolation:isolate;overflow:hidden;border:1px solid #d7deea;border-radius:16px;padding:14px 8px;text-align:center;cursor:pointer;background:#fff;color:#111827;font-size:13px;font-weight:700;box-shadow:0 2px 8px #101c3a0a;transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease,background .22s ease}
+.role-option:hover{transform:translateY(-3px);box-shadow:0 9px 20px #2457e61c;border-color:#9bb4ff}
+.role-option:active{transform:scale(.97)}
+.role-option:has(input:checked){border:2px solid #2457e6;background:linear-gradient(145deg,#eef3ff,#e4edff);box-shadow:0 0 0 4px #2457e615,0 10px 24px #2457e626;animation:roleSelect .38s cubic-bezier(.2,.8,.2,1)}
+.role-option input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.role-option span{display:block}.role-option .role-emoji{font-size:34px;line-height:1.2;margin-bottom:8px;transform-origin:center;transition:transform .25s ease;filter:drop-shadow(0 2px 2px #101c3a12)}
+.role-option:has(input:checked) .role-emoji{animation:emojiSelect .48s cubic-bezier(.2,.8,.2,1)}
+.role-option:focus-within{outline:3px solid #2457e655;outline-offset:3px}
+@keyframes roleSelect{0%{transform:scale(.94)}65%{transform:scale(1.035)}100%{transform:scale(1)}}
+@keyframes emojiSelect{0%{transform:scale(.7) rotate(-12deg)}55%{transform:scale(1.22) rotate(7deg)}100%{transform:scale(1) rotate(0)}}
+@media(max-width:420px){.role-options{grid-template-columns:1fr}.role-option{display:flex;align-items:center;justify-content:center;gap:12px;padding:12px}.role-option .role-emoji{margin:0;font-size:30px}}
+@media(prefers-reduced-motion:reduce){.role-option,.role-option .role-emoji{transition:none;animation:none!important}}
+.notice{background:#fff8e6;color:#805b00;border:1px solid #f3dfaa;padding:12px;border-radius:12px;font-size:12px;line-height:1.5;margin-top:12px}
+.block-screen{min-height:100vh;background:var(--navy);color:#fff;display:grid;place-items:center;padding:24px;text-align:center}.block-screen section{max-width:500px}.block-screen h1{font-size:32px}.block-screen p{color:#d1daf0;line-height:1.6}
+.profile-head{display:flex;align-items:center;gap:16px}.profile-photo{width:78px;height:78px;border-radius:22px;object-fit:cover;background:#edf2ff}.upload{font-size:12px;color:var(--blue);font-weight:700;cursor:pointer}.upload input{display:none}
+footer{text-align:center;color:#98a2b3;font-size:12px;padding:20px}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.sidebar{position:static;display:flex;overflow:auto;gap:4px}.navbtn{white-space:nowrap;width:auto}.cards{grid-template-columns:1fr 1fr}.auth-shell{grid-template-columns:1fr}.auth-side{display:none}}
+@media(max-width:520px){.wrap{padding:12px}.top{padding:10px 12px}.hero{padding:22px}.grid2,.cards{grid-template-columns:1fr}.panel{padding:15px}#map{height:320px}}
+
+ .tutorial-overlay{position:fixed;inset:0;background:rgba(8,17,38,.76);backdrop-filter:blur(7px);z-index:3000;display:grid;place-items:center;padding:18px;animation:fadeIn .35s ease}
+ .tutorial-card{width:min(100%,560px);background:#fff;border-radius:24px;padding:26px;box-shadow:0 24px 80px #0005;position:relative;overflow:hidden;animation:popIn .45s cubic-bezier(.2,.8,.2,1)}
+ .tutorial-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+ .tutorial-progress{height:6px;background:#e9edf5;border-radius:99px;overflow:hidden;margin:18px 0}
+ .tutorial-progress span{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--cyan));border-radius:99px;transition:width .35s ease}
+ .tutorial-visual{height:155px;border-radius:18px;background:linear-gradient(135deg,#edf2ff,#e3fbff);display:grid;place-items:center;margin:14px 0 20px;position:relative;overflow:hidden}
+ .tutorial-emoji{font-size:72px;filter:drop-shadow(0 8px 10px #17203320);animation:floaty 2.4s ease-in-out infinite}
+ .tutorial-orbit{position:absolute;width:120px;height:120px;border:2px dashed #2457e655;border-radius:50%;animation:spin 12s linear infinite}
+ .tutorial-card h2{font-size:25px;margin:0 0 8px;color:var(--navy)}
+ .tutorial-card p{color:var(--muted);line-height:1.6;margin:0}
+ .tutorial-dots{display:flex;gap:7px;justify-content:center;margin:18px 0}
+ .tutorial-dots span{width:8px;height:8px;border-radius:50%;background:#d0d5dd;transition:all .25s}
+ .tutorial-dots span.active{width:24px;border-radius:99px;background:var(--blue)}
+ .tutorial-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:20px}
+ .tutorial-actions .right{display:flex;gap:8px}
+ .tutorial-close{background:transparent;color:#667085;padding:7px 10px}
+ .tutorial-card.step-change{animation:slideUp .3s ease}
+ @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+ @keyframes popIn{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+ @keyframes slideUp{from{opacity:.35;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+ @keyframes floaty{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-9px) rotate(3deg)}}
+ @keyframes spin{to{transform:rotate(360deg)}}
+ @media(prefers-reduced-motion:reduce){.tutorial-overlay,.tutorial-card,.tutorial-emoji,.tutorial-orbit{animation:none!important;transition:none!important}}
+
+
+
+/* Ícones consistentes da navegação e dos atalhos da página inicial */
+.navbtn{gap:11px;min-height:46px;border-radius:12px;padding:10px 12px;font-size:14px;font-weight:750;transition:background .18s ease,color .18s ease,transform .18s ease}
+.navbtn:hover{background:#f3f6ff;color:var(--blue)}
+.navbtn.active{background:#edf2ff;color:var(--blue)}
+.nav-icon{width:22px;height:22px;flex:0 0 22px;display:inline-grid;place-items:center;color:#667085}
+.navbtn.active .nav-icon{color:var(--blue)}
+.nav-icon svg,.home-action-icon svg{width:22px;height:22px;display:block;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.home-actions{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin:0 0 16px}
+.home-action{display:flex;align-items:center;gap:12px;text-align:left;background:#fff;color:var(--ink);border:1px solid var(--line);padding:15px;border-radius:16px;min-height:82px;box-shadow:0 2px 8px #17203308;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+.home-action:hover{transform:translateY(-2px);border-color:#c7d4ff;box-shadow:0 8px 20px #1720330d}
+.home-action-icon{width:44px;height:44px;flex:0 0 44px;border-radius:13px;background:#edf2ff;color:var(--blue);display:grid;place-items:center}
+.home-action-icon svg{width:23px;height:23px}
+.home-action strong{display:block;font-size:13px;line-height:1.25}
+.home-action small{display:block;color:var(--muted);font-size:11px;margin-top:4px;font-weight:500}
+@media(max-width:850px){.home-actions{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.home-actions{gap:8px}.home-action{padding:11px;gap:9px;min-height:72px}.home-action-icon{width:38px;height:38px;flex-basis:38px}.home-action strong{font-size:12px}.home-action small{font-size:10px}}
+/* Modo escuro opcional */
+body.dark{--paper:#0b1220;--ink:#e7edf7;--muted:#a5b2c7;--line:#27354b;--white:#111c2e;background:var(--paper);color:var(--ink)}
+body.dark header,body.dark .sidebar,body.dark .panel,body.dark .home-action,body.dark .role-option{background:#111c2e;color:var(--ink);border-color:#27354b}
+body.dark .top,body.dark .brand{color:var(--ink)}
+body.dark .navbtn{color:#c4cee0}body.dark .navbtn.active,body.dark .navbtn:hover{background:#1c2b45;color:#9bb5ff}
+body.dark .home-action-icon,body.dark .stat{background:#1c2b45;color:#a9c0ff}
+body.dark .field label{color:#d3dced}
+body.dark .field input,body.dark .field textarea,body.dark .field select,body.dark .searchbar input{background:#0b1425!important;color:#f4f7fb!important;border-color:#34445e}
+body.dark input::placeholder,body.dark textarea::placeholder{color:#9aa9bf}
+body.dark .school,body.dark .saved-item{border-color:#34445e;background:#111c2e}
+body.dark .tag{background:#1c2b45;color:#b7c9ff}
+body.dark .notice{background:#332b17;color:#f5d98b;border-color:#675222}
+body.dark .tutorial-card{background:#111c2e;color:var(--ink)}
+body.dark .tutorial-card h2{color:#e7edf7}
+body.dark .tutorial-card p{color:#b5c1d4}
+body.dark .tutorial-visual{background:linear-gradient(135deg,#1b2a44,#173743)}
+body.dark .curiosity-item{border-color:#27354b}
+body.dark .ghost{color:#d9e3f3;border-color:#34445e}
+.theme-toggle{min-width:42px;padding:9px 11px}
+.favorite-btn{background:#fff5e8;color:#9a5b00;border:1px solid #f5d7a6;padding:8px 11px}
+.favorite-btn.saved{background:#fff0f0;color:#b42318;border-color:#f3c2c2}
+body.dark .favorite-btn{background:#302719;color:#ffd48a;border-color:#67502a}
+body.dark .favorite-btn.saved{background:#3a2027;color:#ffb4be;border-color:#70404a}
+.search-filters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media(max-width:600px){.search-filters{grid-template-columns:1fr}}
+.empty-state{padding:18px;border:1px dashed var(--line);border-radius:14px;text-align:center;color:var(--muted);margin-top:12px}
+
+.nav-badge{display:inline-flex;align-items:center;justify-content:center;color:#2457e6;font-size:20px;margin-left:auto}
+.curiosity-item{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid #e7ebf2}
+.curiosity-item:last-of-type{border-bottom:0}
+.curiosity-item p{margin:5px 0 0}
+
+.school-map-marker{background:transparent;border:0}.school-map-marker span{display:grid;place-items:center;width:38px;height:38px;border:2px solid #fff;border-radius:13px 13px 13px 3px;transform:rotate(-45deg);background:#2457e6;color:#fff;font-size:19px;box-shadow:0 2px 10px #101c3a66}.school-map-marker span i{font-style:normal;transform:rotate(45deg)}.map-school-popup{min-width:190px;line-height:1.45}.map-school-popup strong{display:block;font-size:14px;margin-bottom:3px}.map-school-popup .map-stars{color:#f4a900;letter-spacing:1px;font-size:16px}.map-school-popup a{display:inline-block;margin-top:6px;color:#2457e6;font-weight:700;text-decoration:none}.community-box{margin-top:12px;padding:12px;border:1px solid #e4e8f0;border-radius:12px;background:#f8faff}.community-box textarea{width:100%;min-height:65px;border:1px solid #d7deea;border-radius:9px;padding:10px;resize:vertical}.community-box input[type=file]{max-width:100%;font-size:12px}.community-review{border-top:1px solid #e4e8f0;padding:10px 0}.community-review img{width:92px;height:76px;object-fit:cover;border-radius:9px;margin:5px 6px 0 0}.google-link{display:inline-flex;align-items:center;gap:6px;color:#2457e6;font-weight:750;text-decoration:none;font-size:13px;padding:8px 10px;border:1px solid #d7e1ff;border-radius:9px;background:#f5f8ff}
+ .tutorial-overlay{position:fixed;inset:0;background:rgba(8,17,38,.76);backdrop-filter:blur(7px);z-index:3000;display:grid;place-items:center;padding:18px;animation:fadeIn .35s ease}
+ .tutorial-card{width:min(100%,560px);background:#fff;border-radius:24px;padding:26px;box-shadow:0 24px 80px #0005;position:relative;overflow:hidden;animation:popIn .45s cubic-bezier(.2,.8,.2,1)}
+ .tutorial-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+ .tutorial-progress{height:6px;background:#e9edf5;border-radius:99px;overflow:hidden;margin:18px 0}
+ .tutorial-progress span{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--cyan));border-radius:99px;transition:width .35s ease}
+ .tutorial-visual{height:155px;border-radius:18px;background:linear-gradient(135deg,#edf2ff,#e3fbff);display:grid;place-items:center;margin:14px 0 20px;position:relative;overflow:hidden}
+ .tutorial-emoji{font-size:72px;filter:drop-shadow(0 8px 10px #17203320);animation:floaty 2.4s ease-in-out infinite}
+ .tutorial-orbit{position:absolute;width:120px;height:120px;border:2px dashed #2457e655;border-radius:50%;animation:spin 12s linear infinite}
+ .tutorial-card h2{font-size:25px;margin:0 0 8px;color:var(--navy)}
+ .tutorial-card p{color:var(--muted);line-height:1.6;margin:0}
+ .tutorial-dots{display:flex;gap:7px;justify-content:center;margin:18px 0}
+ .tutorial-dots span{width:8px;height:8px;border-radius:50%;background:#d0d5dd;transition:all .25s}
+ .tutorial-dots span.active{width:24px;border-radius:99px;background:var(--blue)}
+ .tutorial-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:20px}
+ .tutorial-actions .right{display:flex;gap:8px}
+ .tutorial-close{background:transparent;color:#667085;padding:7px 10px}
+ .tutorial-card.step-change{animation:slideUp .3s ease}
+ @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+ @keyframes popIn{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+ @keyframes slideUp{from{opacity:.35;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+ @keyframes floaty{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-9px) rotate(3deg)}}
+ @keyframes spin{to{transform:rotate(360deg)}}
+ @media(prefers-reduced-motion:reduce){.tutorial-overlay,.tutorial-card,.tutorial-emoji,.tutorial-orbit{animation:none!important;transition:none!important}}
+
+
+/* Assistente Miau — suporte do S4 EDU */
+#miauLauncher{position:fixed;right:20px;bottom:20px;z-index:4500;width:64px;height:64px;border-radius:22px;background:linear-gradient(145deg,#ffb347,#f07820);color:#24170e;border:3px solid #2a1b13;box-shadow:0 10px 28px #101c3a35;display:grid;place-items:center;font-size:34px;transition:transform .2s}
+#miauLauncher:hover{transform:translateY(-3px) rotate(-4deg)}
+#miauLauncher .miau-dot{position:absolute;right:3px;top:3px;width:13px;height:13px;border-radius:50%;background:#20c477;border:2px solid white}
+#miauPanel{position:fixed;right:20px;bottom:96px;z-index:4501;width:min(370px,calc(100vw - 24px));height:min(540px,calc(100dvh - 125px));background:#fff;border:1px solid #e4e8f0;border-radius:22px;box-shadow:0 20px 70px #101c3a38;display:flex;flex-direction:column;overflow:hidden;color:#172033}
+#miauPanel.hidden{display:none!important}
+.miau-head{padding:14px 16px;background:#17233f;color:white;display:flex;align-items:center;gap:11px}
+.miau-cat{width:43px;height:43px;border-radius:15px;background:linear-gradient(145deg,#ffbd59,#f07820);border:2px solid #21160f;display:grid;place-items:center;font-size:27px;flex:none}
+.miau-head strong{display:block;font-size:15px}.miau-head small{color:#cbd5e8}
+#miauClose{margin-left:auto;background:#ffffff1c;color:white;padding:7px 10px}
+#miauMessages{padding:14px;overflow:auto;flex:1;background:#f7f8fc;display:flex;flex-direction:column;gap:10px}
+.miau-msg{max-width:88%;padding:10px 12px;border-radius:15px;font-size:13px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+.miau-bot{align-self:flex-start;background:white;border:1px solid #e6eaf2;border-bottom-left-radius:5px}
+.miau-user{align-self:flex-end;background:#2457e6;color:white;border-bottom-right-radius:5px}
+.miau-quick{display:flex;gap:6px;overflow:auto;padding:9px 12px;background:#fff;border-top:1px solid #edf0f5}
+.miau-quick button{white-space:nowrap;padding:7px 10px;font-size:11px;border-radius:99px}
+.miau-compose{display:flex;gap:8px;padding:11px;background:white;border-top:1px solid #e6eaf2}
+#miauInput{min-width:0;flex:1;border:1px solid #d7deea;border-radius:12px;padding:11px;color:#111827;background:white}
+#miauSend{padding:10px 14px}
+.miau-note{font-size:10px;color:#7b8495;padding:0 13px 10px;background:#fff}
+@media(max-width:520px){#miauLauncher{right:13px;bottom:14px;width:58px;height:58px}#miauPanel{right:8px;bottom:82px;width:calc(100vw - 16px);height:min(560px,calc(100dvh - 100px))}}
+body.dark #miauPanel{background:#111c2e;color:#e7edf7;border-color:#34445e}
+body.dark #miauMessages{background:#0b1425}
+body.dark .miau-bot{background:#17243a;color:#e7edf7;border-color:#34445e}
+body.dark .miau-quick,body.dark .miau-compose,body.dark .miau-note{background:#111c2e;border-color:#34445e;color:#a5b2c7}
+body.dark #miauInput{background:#0b1425;color:#f4f7fb;border-color:#34445e}
+
+
+#miauHelpToast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:4499;background:#17233f;color:white;padding:12px 16px;border-radius:14px;box-shadow:0 8px 30px #101c3a40;display:flex;gap:12px;align-items:center;max-width:min(520px,calc(100vw - 24px));font-size:13px}
+#miauHelpToast.hidden{display:none!important}
+#miauHelpToast button{background:#ffb347;color:#24170e;padding:8px 11px;white-space:nowrap}
+body.dark #page-settings .panel{background:#111c2e;color:#e7edf7}
+
+
+.app-suggest-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:14px}
+.app-suggest{display:flex;gap:11px;align-items:flex-start;padding:12px;border:1px solid #e4e8f0;border-radius:14px;background:#fbfcff}
+.app-suggest-icon{width:42px;height:42px;border-radius:13px;background:#eef2ff;display:grid;place-items:center;font-size:23px;flex:none}
+.app-suggest p{margin:4px 0 7px}
+.app-suggest a{font-size:12px;font-weight:700;color:#2457e6;text-decoration:underline}
+body.dark .app-suggest{background:#17243a;border-color:#34445e;color:#e7edf7}
+body.dark .app-suggest-icon{background:#263754}
+
+
+.miau-pin-area{margin-top:14px;padding:13px;border:1px solid #e4e8f0;border-radius:14px;background:#f8faff}
+.miau-pin-area.hidden{display:none!important}
+.miau-pin-area input{display:block;width:100%;box-sizing:border-box;margin-top:6px;padding:12px;border:1px solid #cbd5e1;border-radius:10px;background:#fff;color:#111827;font-size:20px;letter-spacing:8px;text-align:center}
+.miau-unlocked{padding:9px 11px;border-radius:10px;background:#e8f8ef;color:#146c3b;font-weight:700;font-size:13px}
+body.dark .miau-pin-area{background:#17243a;border-color:#34445e}
+body.dark .miau-pin-area input{background:#0b1425;color:#f4f7fb;border-color:#34445e}
+
+/* Download do APK: exibido somente em navegadores Android. */
+#s4AndroidApkBanner{display:none;max-width:1180px;margin:12px auto;padding:14px 18px;border:1px solid #b9cdfd;border-radius:16px;background:#eef4ff;color:#172033;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+#s4AndroidApkBanner strong{display:block;font-size:15px}#s4AndroidApkBanner p{margin:4px 0 0;font-size:13px;color:#475467}
+#s4AndroidApkBanner a{display:inline-flex;align-items:center;gap:8px;text-decoration:none;background:#2457e6;color:#fff;padding:11px 16px;border-radius:12px;font-weight:800}
+body.dark #s4AndroidApkBanner{background:#17243a;border-color:#34445e;color:#f4f7fb}
+
+</style>
+</head>
+<body>
+<div id="s4AndroidApkBanner" role="region" aria-label="Baixar aplicativo Android">
+  <div><strong>📱 S4 EDU para Android</strong><p>Baixe o aplicativo para acessar o S4 EDU pelo celular.</p></div>
+  <a id="s4AndroidApkLink" href="./downloads/S4-EDU.apk" download="S4-EDU.apk">⬇ Baixar APK</a>
+</div>
+<div id="auth" class="auth-shell">
+ <aside class="auth-side"><div><div class="brand" style="color:white"><span class="brand-mark">S4</span> S4 EDU</div><div style="margin-top:18vh"><div class="eyebrow">EDUCAÇÃO PERTO DE VOCÊ</div><h1 style="font-size:clamp(36px,5vw,60px);line-height:1;margin:14px 0">Encontre seu<br>próximo caminho.</h1><p>Descubra escolas, ensino médio e faculdades perto de você. Organize sua jornada estudantil em um só lugar.</p></div></div><div class="small" style="color:#aab8d8">S4 EDU · CONHECIMENTO EM MOVIMENTO</div></aside>
+ <main class="auth-main"><div class="auth-card">
+  <div class="brand"><span class="brand-mark">S4</span> S4 EDU</div>
+  <div id="login-form">
+   <div class="eyebrow">BEM-VINDO DE VOLTA</div><h1>Entre na sua conta</h1><p class="muted">Use seu e-mail para acessar o S4 EDU.</p>
+   <div class="field"><label for="loginEmail">E-mail</label><input id="loginEmail" type="email" placeholder="voce@gmail.com" autocomplete="email" required></div>
+   <button style="width:100%" onclick="login()">Entrar / continuar</button>
+   <p class="muted small" style="text-align:center;margin:18px 0">Ainda não tem conta? <a href="#" onclick="showRegister();return false">Criar cadastro</a></p>
+   <div class="notice"><strong>Modo demonstração:</strong> o cadastro e o login por e-mail são salvos neste navegador. O botão não autentica uma conta Google real. Para publicar com segurança, conecte um serviço de autenticação e banco de dados.</div>
+  </div>
+  <div id="register-form" class="hidden">
+   <div class="eyebrow">CRIE SEU ACESSO</div><h1>Comece por aqui</h1><p class="muted">Preencha os dados para criar seu perfil.</p>
+   <div class="field"><label>Como você vai usar o S4 EDU?</label>
+    <div class="role-options">
+     <label class="role-option"><input type="radio" name="regRole" value="pai" required><span class="role-emoji" aria-hidden="true">👨‍👩‍👧‍👦</span><span>Pai / Mãe</span></label>
+     <label class="role-option"><input type="radio" name="regRole" value="filho" required><span class="role-emoji" aria-hidden="true">🧒</span><span>Filho(a)</span></label>
+     <label class="role-option"><input type="radio" name="regRole" value="universitario" required><span class="role-emoji" aria-hidden="true">🎓</span><span>Universitário</span></label>
+    </div>
+   </div>
+   <div class="field"><label>Nome completo</label><input id="regName" type="text" placeholder="Seu nome" autocomplete="name" required></div>
+   <div class="field"><label>E-mail</label><input id="regEmail" type="email" placeholder="voce@gmail.com" autocomplete="email" required></div>
+   <div class="field"><label>Data de nascimento (obrigatória)</label><input id="regDob" type="date" autocomplete="bday" required></div>
+   <button style="width:100%" onclick="register()">Criar conta</button>
+   <p class="muted small" style="text-align:center"><a href="#" onclick="showLogin();return false">Voltar ao login</a></p>
+  </div>
+ </div></main>
+</div>
+<div id="blocked" class="block-screen hidden"><section><div class="brand" style="justify-content:center;color:white"><span class="brand-mark">S4</span> S4 EDU</div><h1>Acesso não permitido</h1><p>FOI MAL, BAIXINHO, MAS SÓ COM OS SEUS PAIS PARA VOCÊ USAR ESSE APP.</p><button class="secondary" onclick="logout()">Voltar</button></section></div>
+<div id="app" class="hidden">
+ <header><div class="top"><div class="brand"><span class="brand-mark">S4</span> S4 EDU</div><div class="top-right"><span id="topName" class="small muted"></span><img id="topAvatar" class="avatar" alt="Foto do perfil"><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Ativar modo escuro" title="Alternar tema">🌙</button><button class="ghost" onclick="logout()">Sair</button></div></div></header>
+ <div class="wrap">
+  <section class="hero"><div class="eyebrow">SUA JORNADA COMEÇA AQUI</div><h1>Educação mais<br>perto de você.</h1><p>Encontre instituições, explore possibilidades e construa seu currículo estudantil.</p><button class="secondary" onclick="go('explore')">Explorar instituições ↗</button></section>
+  <div class="home-actions" aria-label="Acessos rápidos">
+   <button class="home-action" onclick="go('search')"><span class="home-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg></span><span><strong>Encontrar escola</strong><small>Pesquise instituições</small></span></button>
+   <button class="home-action" onclick="go('map')"><span class="home-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></span><span><strong>Ver mapa</strong><small>Explore a região</small></span></button>
+   <button class="home-action" onclick="go('resume')"><span class="home-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><circle cx="10" cy="9" r="2.2"/><path d="M7 16c.7-2 5.3-2 6 0M15 9h2M15 13h2M15 17h2"/></svg></span><span><strong>Meu currículo</strong><small>Organize conquistas</small></span></button>
+   <button class="home-action" onclick="go('notes')"><span class="home-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span><span><strong>Minhas notas</strong><small>Guarde lembretes</small></span></button>
+   <button class="home-action" onclick="go('favorites')"><span class="home-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.8 8.8c0 5.2-8.8 11-8.8 11S3.2 14 3.2 8.8A4.7 4.7 0 0 1 12 6.1a4.7 4.7 0 0 1 8.8 2.7Z"/></svg></span><span><strong>Favoritas</strong><small>Salve instituições</small></span></button>
+  </div>
+  <div class="layout">
+   <nav class="sidebar">
+    <button class="navbtn active" data-page="explore" onclick="go('explore')"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7"/><path d="M5 9.5V21h14V9.5M9 21v-7h6v7"/></svg></span><span>Início</span></button>
+    <button class="navbtn" data-page="search" onclick="go('search')"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg></span><span>Pesquisar</span></button>
+    <button class="navbtn" data-page="map" onclick="go('map')"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></span><span>Mapa</span></button>
+    <button class="navbtn" data-page="favorites" onclick="go('favorites')"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.8 8.8c0 5.2-8.8 11-8.8 11S3.2 14 3.2 8.8A4.7 4.7 0 0 1 12 6.1a4.7 4.7 0 0 1 8.8 2.7Z"/></svg></span><span>Favoritas</span><span id="favoritesCount" class="nav-badge">0</span></button>
+    <button class="navbtn" data-page="curiosities" onclick="go('curiosities')"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 2 1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2Z"/><path d="m19 15 .9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9L19 15Z"/></svg></span><span>Curiosidades</span><span id="curiosityBadge" class="nav-badge" style="display:none">•</span></button>
+    <button class="navbtn" data-page="notes" onclick="go('notes')"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20h4l11.5-11.5a2.1 2.1 0 0 0-4-4L4 16v4Z"/><path d="m14 6 4 4"/></svg></span><span>Anotações</span></button>
+    <button class="navbtn" data-page="documents" onclick="go('documents')"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3h7l5 5v13H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg></span><span>Documentos</span></button>
+    <button class="navbtn" data-page="profile" onclick="go('profile')"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 21a7 7 0 0 1 14 0"/></svg></span><span>Perfil</span></button>
+    <button class="navbtn" data-page="settings" onclick="go('settings')"><span class="nav-icon" aria-hidden="true">⚙️</span><span>Configurações</span></button>
+   </nav>
+   <main class="content">
+    <section id="page-explore" class="page">
+     <div class="panel"><div class="eyebrow">PAINEL</div><h2>Olá, <span id="helloName">estudante</span> 👋</h2><p class="muted">Descubra instituições de ensino ao seu redor.</p><div class="cards"><div class="stat"><strong>3</strong><span class="small muted">Categorias de ensino</span></div><div class="stat"><strong id="homeFavoriteTotal">0</strong><span class="small muted">Instituições favoritas</span></div><div class="stat"><strong id="homeNoteTotal">0</strong><span class="small muted">Anotações salvas</span></div></div></div>
+     <div class="panel"><div class="row between"><div><h2>Instituições próximas</h2><p class="muted small">GPS opcional: você também pode pesquisar digitando uma cidade ou bairro.</p></div><button class="secondary" onclick="startLiveGPS()">Ativar GPS em tempo real</button></div><div class="searchbar"><input id="quickCity" placeholder="Digite cidade ou bairro"><button onclick="searchCity('quickCity')">Buscar</button></div><div id="nearbyResults"><p class="muted small">Digite uma cidade ou bairro para buscar instituições. Não precisa ativar o GPS.</p></div></div>
+    </section>
+    <section id="page-curiosities" class="page hidden">
+     <div class="panel">
+      <div class="eyebrow">NOVIDADES DA EDUCAÇÃO</div>
+      <div class="row between" style="align-items:flex-start;gap:12px;flex-wrap:wrap">
+       <div><h2>Curiosidades das escolas da região ✦</h2><p class="muted">Destaques e indicadores públicos para ajudar na pesquisa. Não existe uma única escola melhor para todo mundo.</p></div>
+       <span class="badge" id="curiosityUpdated">Conteúdo consultado em 22/11/2026</span>
+      </div>
+      <div class="field"><label for="curiosityCity">Sua região</label><input id="curiosityCity" value="Gravataí, RS" placeholder="Digite sua cidade"><p class="small muted">A lista é consultada em dados colaborativos. Você pode alterar a cidade para consultar sua região. As notificações funcionam enquanto esta página estiver aberta.</p></div>
+      <div class="row" style="flex-wrap:wrap">
+       <button onclick="refreshCuriosities()">↻ Atualizar escolas da região</button>
+       <button class="secondary" onclick="enableCuriosityAlerts()">Ativar notificações</button>
+      </div>
+      <p id="curiosityStatus" class="small muted" aria-live="polite">As instituições do mapa colaborativo serão consultadas quando você atualizar esta aba.</p>
+     </div>
+     <div class="panel">
+      <div class="eyebrow">DESTAQUES POR INDICADORES</div><h2>Escolas que merecem sua atenção</h2>
+      <p class="small muted">Dados públicos divulgados para Gravataí. IDEB mede uma etapa específica e não resume sozinho a qualidade de uma escola.</p>
+      <div class="curiosity-item"><div><strong>EMEF Duque de Caxias</strong><p class="small muted">IDEB 2025: 6,6 nos anos iniciais do Ensino Fundamental.</p></div><span class="badge">IDEB 6,6</span></div>
+      <div class="curiosity-item"><div><strong>Colégio Estadual Antônio Gomes Corrêa</strong><p class="small muted">IDEB 2025: 6,6 nos anos iniciais do Ensino Fundamental.</p></div><span class="badge">IDEB 6,6</span></div>
+      <div class="curiosity-item"><div><strong>EMEF Ivete Serafini</strong><p class="small muted">IDEB 2025: 6,6 nos anos iniciais do Ensino Fundamental.</p></div><span class="badge">IDEB 6,6</span></div>
+      <div class="curiosity-item"><div><strong>Colégio Dom Feliciano</strong><p class="small muted">Aparece entre os destaques particulares no levantamento de desempenho do ENEM 2025 para Gravataí.</p></div><span class="badge">ENEM 2025</span></div>
+      <div class="curiosity-item"><div><strong>Colégio Sinodal Prado Gravataí</strong><p class="small muted">Lidera o levantamento citado de escolas particulares pelo desempenho no ENEM 2025 em Gravataí.</p></div><span class="badge">ENEM 2025</span></div>
+      <p class="small muted">Confira metodologia, etapas e dados completos nas fontes antes de decidir uma matrícula.</p>
+      <p><a href="https://quantislabs.com.br/escolas/rs/gravatai" target="_blank" rel="noopener">Ver indicadores e IDEB 2025 ↗</a></p>
+      <p><a href="https://raioxdaescola.com.br/rs/gravatai" target="_blank" rel="noopener">Ver levantamento ENEM 2025 ↗</a></p>
+      <p><a href="https://www.melhorescola.com.br/escola/por-avaliacao/rio-grande-do-sul/gravatai" target="_blank" rel="noopener">Ver avaliações de famílias e estudantes ↗</a></p>
+     </div>
+     <div class="panel">
+      <div class="eyebrow">MAPA COLABORATIVO</div><h2>Escolas encontradas na região</h2>
+      <p class="small muted">Esta lista é consultada ao vivo no OpenStreetMap e pode mudar conforme os dados colaborativos forem editados.</p>
+      <div id="curiosityLiveList"><p class="muted small">Toque em “Atualizar escolas da região” para consultar.</p></div>
+     </div>
+    </section>
+    <section id="page-search" class="page hidden">
+     <div class="panel"><div class="eyebrow">BUSCA EDUCACIONAL</div><h2>Encontre uma instituição</h2><p class="muted">Pesquise por cidade, bairro ou nome da instituição.</p><div class="search-filters"><div class="field"><label>Tipo de instituição</label><select id="kind" onchange="repeatLastSearch()"><option value="all">Todas</option><option value="school">Ensino fundamental / médio</option><option value="college">Faculdades / universidades</option></select></div><div class="field"><label>Distância da busca</label><select id="radius" onchange="repeatLastSearch()"><option value="5000">5 km</option><option value="12000" selected>12 km</option><option value="25000">25 km</option><option value="50000">50 km</option></select></div><div class="field"><label>Rede de ensino</label><select id="ownership" onchange="repeatLastSearch()"><option value="all">Pública e particular</option><option value="public">Somente pública (quando informado)</option><option value="private">Somente particular (quando informado)</option></select></div></div><div class="searchbar"><input id="searchPlace" placeholder="Ex.: Viamão, RS"><button onclick="searchCity('searchPlace')">Pesquisar</button></div><div id="searchResults"></div></div>
+    </section>
+    <section id="page-favorites" class="page hidden">
+     <div class="panel"><div class="eyebrow">SUA LISTA PESSOAL</div><h2>Instituições favoritas ⭐</h2><p class="muted">Guarde escolas e faculdades para comparar e consultar depois.</p><div id="favoritesList"><div class="empty-state">Você ainda não salvou instituições. Use “☆ Favoritar” nos resultados de pesquisa.</div></div></div>
+    </section>
+    <section id="page-map" class="page hidden"><div class="panel"><h2>Mapa educacional</h2><p class="muted small">Pesquise uma cidade ou instituição sem GPS. Ativar a localização é opcional.</p><div id="map"></div><div class="small muted" style="display:flex;gap:14px;flex-wrap:wrap;margin-top:9px"><span>🏫 Escola</span><span>🎓 Faculdade</span><span>🏛️ Universidade</span><span>⭐ Abra a ficha para consultar avaliações no Google Maps</span></div><div class="row" style="margin-top:12px"><button class="secondary" onclick="startLiveGPS()">Ativar GPS em tempo real</button><button class="ghost" onclick="stopLiveGPS()">Parar GPS</button><button class="ghost" onclick="refreshMap()">Atualizar mapa</button><span class="muted small" id="mapStatus">Mapa pronto para pesquisa. O GPS é opcional.</span></div><p class="small muted" style="margin-top:9px">Mapa colaborativo com ícones educacionais. As localizações vêm do OpenStreetMap; notas, avaliações e fotos oficiais do Google podem ser consultadas pelo link de cada escola. <a href="https://www.openstreetmap.org/fixthemap" target="_blank" rel="noopener">Informar erro no mapa</a>.</p><div id="gpsResults"></div></div></section>
+    <section id="page-resume" class="page hidden">
+     <div class="panel"><div class="eyebrow">SEU FUTURO EM CONSTRUÇÃO</div><h2>Currículo estudantil</h2><p class="muted">Opcional. Preencha o que desejar e salve suas informações.</p>
+      <div class="field"><label>Formação escolar</label><input id="rEducation" placeholder="Ex.: Ensino médio em andamento"></div>
+      <div class="grid2"><div class="field"><label>Instituição de ensino</label><input id="rSchool" placeholder="Nome da escola"></div><div class="field"><label>Cursos realizados</label><input id="rCourses" placeholder="Cursos e oficinas"></div></div>
+      <div class="field"><label>Certificados</label><textarea id="rCertificates" placeholder="Certificados e conquistas"></textarea></div>
+      <div class="grid2"><div class="field"><label>Idiomas</label><input id="rLanguages" placeholder="Ex.: Português, inglês básico"></div><div class="field"><label>Habilidades</label><input id="rSkills" placeholder="Ex.: comunicação, informática"></div></div>
+      <div class="field"><label>Projetos e experiências acadêmicas</label><textarea id="rProjects" placeholder="Conte sobre projetos, feiras, trabalhos..."></textarea></div>
+      <div class="field"><label>Objetivos profissionais</label><textarea id="rGoals" placeholder="O que você pretende alcançar?"></textarea></div>
+      <div class="row"><button onclick="saveResume()">Salvar currículo</button><button class="secondary" onclick="printResume()">Gerar PDF / imprimir</button></div>
+     </div>
+    </section>
+    <section id="page-notes" class="page hidden">
+     <div class="panel"><div class="eyebrow">ORGANIZE SUA ROTINA</div><h2>Minhas anotações</h2><p class="muted">Suas anotações ficam salvas neste navegador.</p>
+      <div class="field"><label for="noteTitle">Título</label><input id="noteTitle" maxlength="100" placeholder="Ex.: Trabalho de História"></div>
+      <div class="field"><label for="noteBody">Anotação</label><textarea id="noteBody" rows="5" placeholder="Escreva aqui..."></textarea></div>
+      <div class="row"><button onclick="saveNote()">Salvar anotação</button><button class="secondary" onclick="clearNoteForm()">Limpar</button></div>
+     </div>
+     <div class="panel"><h2>Anotações salvas</h2><div id="notesList"><p class="muted small">Nenhuma anotação salva ainda.</p></div></div>
+    </section>
+    <section id="page-documents" class="page hidden">
+     <div class="panel"><div class="eyebrow">SEUS ARQUIVOS</div><h2>Meus documentos</h2><p class="muted">Guarde arquivos de até 1 MB neste navegador. Para arquivos importantes, mantenha também uma cópia de segurança.</p>
+      <div class="field"><label for="documentFile">Escolher documento</label><input id="documentFile" type="file"></div>
+      <button onclick="saveDocument()">Guardar documento</button>
+     </div>
+     <div class="panel"><h2>Documentos guardados</h2><div id="documentsList"><p class="muted small">Nenhum documento guardado ainda.</p></div></div>
+    </section>
+    <section id="page-profile" class="page hidden">
+     <div class="panel"><h2>Meu perfil</h2><div class="profile-head"><img id="profilePhoto" class="profile-photo" alt="Foto de perfil"><label class="upload">Alterar foto<input type="file" accept="image/*" onchange="uploadPhoto(event)"></label></div>
+      <div class="grid2"><div class="field"><label>Nome completo</label><input id="pName"></div><div class="field"><label>Nome de usuário</label><input id="pUsername" placeholder="@seuusuario"></div><div class="field"><label>E-mail</label><input id="pEmail" disabled></div><div class="field"><label>Data de nascimento</label><input id="pDob" type="date" disabled></div><div class="field"><label>Cidade</label><input id="pCity" placeholder="Sua cidade"></div><div class="field"><label>Estado</label><input id="pState" placeholder="UF"></div><div class="field"><label>Instituição onde estuda</label><input id="pSchool" placeholder="Nome da instituição"></div></div>
+      <div class="field"><label>Sobre mim</label><textarea id="pBio" placeholder="Escreva uma breve apresentação..."></textarea></div><button onclick="saveProfile()">Salvar perfil</button>
+     </div>
+     <div class="panel">
+      <h2>Área pessoal</h2>
+      <p class="muted">Acesse seu currículo estudantil por aqui.</p>
+      <div class="row" style="align-items:center;justify-content:space-between;gap:14px">
+       <div><strong>▤ Currículo estudantil</strong><p class="small muted" style="margin:5px 0 0">Formação, cursos, certificados, idiomas e habilidades.</p></div>
+       <button onclick="go('resume')">Abrir currículo</button>
+      </div>
+     </div>
+     <div class="panel"><h2>Permissões e privacidade</h2><p class="muted small">A localização serve para encontrar instituições. Você pode pesquisar manualmente sem ativá-la.</p><div class="row"><button class="secondary" onclick="locate()">Permitir localização</button><button class="ghost" onclick="askNotifications()">Ativar notificações</button><button class="ghost" onclick="toggleTheme()">Alternar modo claro/escuro</button><button class="ghost" onclick="startTutorial(true)">Ver tutorial novamente</button></div><p class="small muted">Seus dados deste protótipo ficam salvos somente neste navegador e neste dispositivo. O login por e-mail é demonstrativo, não é uma autenticação Google real nem sincroniza dados entre aparelhos.</p><div class="row" style="margin-top:12px"><button class="ghost" onclick="exportData()">Exportar meus dados</button><button class="ghost" onclick="deleteAccount()" style="color:#b42318;border-color:#f0c7c7">Excluir conta deste navegador</button></div></div>
+    </section>
+
+    <section id="page-settings" class="page hidden">
+     <div class="panel">
+      <div class="eyebrow">AJUSTES DO APLICATIVO</div>
+      <h2>Configurações ⚙️</h2>
+      <p class="muted">Personalize sua experiência e encontre ajuda quando precisar.</p>
+      <div class="row" style="flex-wrap:wrap;gap:10px">
+       <button class="secondary" onclick="toggleTheme()">🌙 Alternar tema</button>
+       <button class="ghost" onclick="askNotifications()">🔔 Notificações</button>
+       <button class="ghost" onclick="startTutorial(true)">📘 Ver tutorial</button>
+      </div>
+     </div>
+     <div class="panel" style="border:2px solid #f4b04b;background:linear-gradient(135deg,#fffaf0,#fff)">
+      <div class="row" style="align-items:center;gap:14px">
+       <div class="miau-cat" style="width:58px;height:58px;font-size:34px">🐈</div>
+       <div style="flex:1"><div class="eyebrow">SUPORTE DO S4 EDU</div><h2 style="margin:2px 0">Precisa de ajuda? Chame o Miau!</h2><p class="small muted" style="margin:0">O Assistente Miau pode explicar as funções e ajudar a resolver dificuldades no aplicativo.</p></div>
+      </div>
+      <button style="margin-top:14px;width:100%" onclick="toggleMiau(true);miauAddMessage('Você abriu o suporte pela aba Configurações. Como posso ajudar? 🐾','bot')">🐾 Abrir Suporte Miau</button>
+     </div>
+
+
+     <div class="panel" id="miauPasswordVault">
+      <div class="row" style="align-items:center;gap:12px">
+       <div style="font-size:30px">🔐</div>
+       <div style="flex:1"><h3 style="margin:0">Senhas salvas recentemente</h3><p class="small muted" style="margin:4px 0 0">Área de acesso protegido por código de 4 números.</p></div>
+      </div>
+      <div id="miauPinSetup" class="miau-pin-area hidden">
+       <p class="small">Crie um código pessoal de 4 números para abrir esta área do S4 EDU.</p>
+       <label for="miauPinNew">Criar código de 4 números</label>
+       <input id="miauPinNew" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="new-password" placeholder="••••">
+       <label for="miauPinConfirm" style="display:block;margin-top:10px">Confirmar código</label>
+       <input id="miauPinConfirm" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="new-password" placeholder="••••">
+       <button style="width:100%;margin-top:12px" onclick="miauCreatePasswordPin()">Criar código de permissão</button>
+       <p class="small muted">Não use sua senha de e-mail ou banco. Escolha um código que você consiga lembrar.</p>
+      </div>
+      <div id="miauPinUnlock" class="miau-pin-area hidden">
+       <p class="small">Digite seu código de permissão para continuar.</p>
+       <label for="miauPinEntry">Código de 4 números</label>
+       <input id="miauPinEntry" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="current-password" placeholder="••••">
+       <button style="width:100%;margin-top:12px" onclick="miauUnlockPasswordArea()">Desbloquear</button>
+       <p id="miauPinError" class="small" role="status"></p>
+      </div>
+      <div id="miauPasswordContent" class="miau-pin-area hidden">
+       <div class="miau-unlocked">🔓 Área do S4 EDU desbloqueada</div>
+       <p class="small">Agora você pode consultar as instruções para abrir as senhas guardadas no gerenciador seguro do seu aparelho.</p>
+       <details style="padding:10px 0">
+        <summary style="cursor:pointer;font-weight:600">Como encontrar minhas senhas?</summary>
+        <div class="small muted" style="padding:10px 2px">
+         <p><b>Google Chrome (computador ou Android):</b> abra o Chrome → Configurações → Gerenciador de senhas do Google. No iPhone, use o app Senhas da Apple ou Ajustes → Senhas.</p>
+         <p><b>Microsoft Edge:</b> Configurações → Perfis → Senhas.</p>
+         <p><b>Safari no iPhone/iPad:</b> abra o app Senhas ou Ajustes → Senhas.</p>
+         <p>O próprio gerenciador pode pedir PIN, impressão digital, Face ID ou senha do aparelho.</p>
+        </div>
+       </details>
+       <button class="secondary" style="width:100%" onclick="miauOpenPasswordHelp()">🐾 Perguntar ao Miau sobre senhas</button>
+       <button class="ghost" style="width:100%;margin-top:8px" onclick="miauLockPasswordArea()">🔒 Bloquear área agora</button>
+       <button class="ghost" style="width:100%;margin-top:8px" onclick="miauChangePasswordPin()">Alterar código de permissão</button>
+      </div>
+      <p class="small muted" style="margin-bottom:0">Importante: esse código protege somente esta área de orientações dentro do S4 EDU. Ele não libera nem lê as senhas do Chrome, Safari ou outros gerenciadores; esses serviços continuam usando a segurança própria do aparelho.</p>
+     </div>
+     <div class="panel">
+      <div class="row" style="align-items:center;gap:12px">
+       <div style="font-size:30px">📱</div>
+       <div style="flex:1"><h3 style="margin:0">Apps como esse</h3><p class="small muted" style="margin:4px 0 0">Conheça outras ferramentas que podem complementar seus estudos.</p></div>
+      </div>
+      <div class="app-suggest-list">
+       <div class="app-suggest"><div class="app-suggest-icon">🎓</div><div style="flex:1"><b>Google Classroom</b><p class="small muted">Organização de turmas, tarefas e materiais escolares.</p><a href="https://classroom.google.com/" target="_blank" rel="noopener noreferrer">Acessar site oficial</a></div></div>
+       <div class="app-suggest"><div class="app-suggest-icon">🧠</div><div style="flex:1"><b>Khan Academy</b><p class="small muted">Aulas e exercícios gratuitos de várias matérias.</p><a href="https://pt.khanacademy.org/" target="_blank" rel="noopener noreferrer">Acessar site oficial</a></div></div>
+       <div class="app-suggest"><div class="app-suggest-icon">🌍</div><div style="flex:1"><b>Duolingo</b><p class="small muted">Prática de idiomas com atividades curtas.</p><a href="https://www.duolingo.com/" target="_blank" rel="noopener noreferrer">Acessar site oficial</a></div></div>
+       <div class="app-suggest"><div class="app-suggest-icon">🗂️</div><div style="flex:1"><b>Quizlet</b><p class="small muted">Cartões de estudo e revisão de conteúdos.</p><a href="https://quizlet.com/" target="_blank" rel="noopener noreferrer">Acessar site oficial</a></div></div>
+      </div>
+      <p class="small muted" style="margin-bottom:0">Os serviços acima são independentes do S4 EDU. Verifique idade mínima, condições e privacidade em cada serviço.</p>
+     </div>
+
+     <div class="panel">
+      <h3>Privacidade e armazenamento</h3>
+      <p class="small muted">O suporte Miau não precisa da sua senha. Nesta versão, seus dados do app ficam armazenados neste navegador e aparelho. Para sincronizar entre dispositivos, será necessário configurar uma conta e um banco de dados online.</p>
+      <div class="row" style="flex-wrap:wrap">
+       <button class="ghost" onclick="exportData()">Exportar meus dados</button>
+       <button class="ghost" onclick="deleteAccount()" style="color:#b42318;border-color:#f0c7c7">Excluir dados deste navegador</button>
+      </div>
+     </div>
+    </section>
+
+   </main>
+  </div>
+  <footer>S4 EDU · Protótipo demonstrativo. Dados, anotações, documentos e avaliações ficam neste navegador; confira os dados das instituições nos canais oficiais.</footer>
+ </div>
+</div>
+
+<div id="tutorialOverlay" class="tutorial-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="tutorialTitle">
+ <section class="tutorial-card" id="tutorialCard">
+  <div class="tutorial-top"><span class="eyebrow">CONHEÇA O S4 EDU</span><button class="tutorial-close" onclick="finishTutorial()">Pular tutorial ✕</button></div>
+  <div class="tutorial-progress"><span id="tutorialProgress" style="width:20%"></span></div>
+  <div class="tutorial-visual"><div class="tutorial-orbit"></div><div class="tutorial-emoji" id="tutorialEmoji">🔎</div></div>
+  <h2 id="tutorialTitle">Encontre instituições</h2>
+  <p id="tutorialText">Pesquise escolas e faculdades pelo nome, cidade ou bairro. Você não precisa ativar o GPS para pesquisar.</p>
+  <div class="tutorial-dots" id="tutorialDots"><span class="active"></span><span></span><span></span><span></span><span></span></div>
+  <div class="tutorial-actions"><button class="ghost" id="tutorialBack" onclick="tutorialBack()" disabled>Voltar</button><div class="right"><button class="secondary" onclick="finishTutorial()">Pular</button><button id="tutorialNext" onclick="tutorialNext()">Próximo</button></div></div>
+ </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js" onerror="this.onerror=null;this.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'"></script>
+<script>
+const $=id=>document.getElementById(id);
+let user=null,map=null,markers=[],lastCenter=null,lastResults=[],lastTarget="nearbyResults";
+let gpsWatchId=null,gpsMarker=null,gpsAccuracyCircle=null,lastGpsSearchPoint=null,lastGpsSearchTime=0;
+function getUser(){try{return JSON.parse(localStorage.getItem('s4edu_user')||'null')}catch{return null}}
+function setUser(){localStorage.setItem('s4edu_user',JSON.stringify(user))}
+function ageFromDate(s){
+ if(!/^\d{4}-\d{2}-\d{2}$/.test(String(s||'')))return -1;
+ const [year,month,day]=s.split('-').map(Number),birth=new Date(year,month-1,day),today=new Date();
+ if(birth.getFullYear()!==year||birth.getMonth()!==month-1||birth.getDate()!==day||birth>today)return -1;
+ let age=today.getFullYear()-year;
+ if(today.getMonth()<month-1||(today.getMonth()===month-1&&today.getDate()<day))age--;
+ return age;
+}
+function showRegister(){$('login-form').classList.add('hidden');$('register-form').classList.remove('hidden');$('regName').focus()}
+function showLogin(){$('register-form').classList.add('hidden');$('login-form').classList.remove('hidden')}
+function register(){
+ const name=$('regName')?.value.trim()||'';
+ const email=($('regEmail')?.value||'').trim().toLowerCase();
+ const dob=$('regDob')?.value||'';
+ const role=document.querySelector('input[name="regRole"]:checked')?.value||'';
+ const focus=id=>$(id)?.focus();
+ if(!role){alert('Escolha como você vai usar o S4 EDU.');document.querySelector('input[name="regRole"]')?.focus();return}
+ if(name.length<2){alert('Digite seu nome completo (pelo menos 2 caracteres).');focus('regName');return}
+ if(!email){alert('Digite seu e-mail.');focus('regEmail');return}
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){alert('Digite um e-mail válido, como voce@gmail.com.');focus('regEmail');return}
+ if(!dob){alert('Selecione sua data de nascimento.');focus('regDob');return}
+ const age=ageFromDate(dob);
+ if(age<0){alert('A data de nascimento é inválida ou está no futuro. Confira e tente novamente.');focus('regDob');return}
+ if(age<13){$('auth').classList.add('hidden');$('blocked').classList.remove('hidden');return}
+ try{
+  user={name,email,dob,role,photo:'',username:'',city:'',state:'',school:'',bio:'',resume:{},notes:[],documents:[],ratings:{},favorites:[]};
+  localStorage.setItem('s4edu_user',JSON.stringify(user));
+  enterApp();
+ }catch(error){
+  user=null;
+  console.error('S4 EDU: falha ao concluir cadastro',error);
+  alert('Não foi possível salvar seu cadastro neste navegador. Verifique se o armazenamento do site está permitido e tente novamente.');
+ }
+}
+function login(){const email=$('loginEmail').value.trim().toLowerCase();if(!email){alert('Digite seu e-mail.');return}const saved=getUser();if(!saved||saved.email.toLowerCase()!==email){alert('Conta não encontrada neste navegador. Crie seu cadastro primeiro.');return}user=saved;if(ageFromDate(user.dob)<13){$('auth').classList.add('hidden');$('blocked').classList.remove('hidden');return}enterApp()}
+function enterApp(){user.notes=Array.isArray(user.notes)?user.notes:[];user.documents=Array.isArray(user.documents)?user.documents:[];user.ratings=user.ratings||{};user.favorites=Array.isArray(user.favorites)?user.favorites:[];$('auth').classList.add('hidden');$('blocked').classList.add('hidden');$('app').classList.remove('hidden');applyTheme();renderUser();loadResume();renderNotes();renderDocuments();renderFavorites();askPermissionsOnce();if(!user.tutorialSeen)setTimeout(()=>startTutorial(false),500)}
+function logout(){user=null;$('app').classList.add('hidden');$('blocked').classList.add('hidden');$('auth').classList.remove('hidden');showLogin()}
+function renderUser(){const initials=(user.name||'S').split(' ').map(x=>x[0]).slice(0,2).join('').toUpperCase();$('topName').textContent=user.name;$('helloName').textContent=(user.name||'').split(' ')[0];$('topAvatar').src=user.photo||avatarSvg(initials);$('profilePhoto').src=user.photo||avatarSvg(initials);$('pName').value=user.name||'';$('pUsername').value=user.username||'';$('pEmail').value=user.email||'';$('pDob').value=user.dob||'';$('pCity').value=user.city||'';$('pState').value=user.state||'';$('pSchool').value=user.school||'';$('pBio').value=user.bio||'';if($('homeFavoriteTotal'))$('homeFavoriteTotal').textContent=String((user.favorites||[]).length);if($('homeNoteTotal'))$('homeNoteTotal').textContent=String((user.notes||[]).length);if($('favoritesCount'))$('favoritesCount').textContent=String((user.favorites||[]).length)}
+function avatarSvg(t){return 'data:image/svg+xml,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" rx="24" fill="#eaf0ff"/><text x="50" y="60" font-size="34" text-anchor="middle" fill="#2457e6" font-family="Arial" font-weight="bold">${t}</text></svg>`)}
+function uploadPhoto(e){const f=e.target.files[0];if(!f)return;if(f.size>1500000){alert('Escolha uma imagem de até 1,5 MB.');return}const r=new FileReader();r.onload=()=>{user.photo=r.result;setUser();renderUser()};r.readAsDataURL(f)}
+function saveProfile(){user.name=$('pName').value.trim()||user.name;user.username=$('pUsername').value;user.city=$('pCity').value;user.state=$('pState').value;user.school=$('pSchool').value;user.bio=$('pBio').value;setUser();renderUser();alert('Perfil salvo neste navegador!')}
+function go(page){document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));$('page-'+page).classList.remove('hidden');document.querySelectorAll('.navbtn').forEach(x=>x.classList.toggle('active',x.dataset.page===page));if(page==='map'){setTimeout(()=>{initMap();if(map){map.invalidateSize();if(lastCenter)map.setView(lastCenter,13);drawMarkers()}},180)}if(page==='notes')renderNotes();if(page==='documents')renderDocuments();if(page==='favorites')renderFavorites();if(page==='curiosities'){if(!$('curiosityCity').value.trim())$('curiosityCity').value=user.city?`${user.city}${user.state?', '+user.state:''}`:'Gravataí, RS';checkCuriosityRefresh()}}
+
+function applyTheme(){const dark=localStorage.getItem('s4edu_theme')==='dark';document.body.classList.toggle('dark',dark);const b=$('themeToggle');if(b){b.textContent=dark?'☀️':'🌙';b.title=dark?'Ativar modo claro':'Ativar modo escuro';b.setAttribute('aria-label',b.title)}}
+function toggleTheme(){const dark=!document.body.classList.contains('dark');localStorage.setItem('s4edu_theme',dark?'dark':'light');applyTheme()}
+function favoriteKey(item){return ratingKey(item)}
+function isFavorite(item){return (user?.favorites||[]).some(x=>favoriteKey(x)===favoriteKey(item))}
+function toggleFavorite(index){
+ if(!user||!lastResults[index])return;
+ const item=lastResults[index],key=favoriteKey(item);user.favorites=user.favorites||[];
+ if(isFavorite(item))user.favorites=user.favorites.filter(x=>favoriteKey(x)!==key);
+ else user.favorites.unshift({...item,savedAt:new Date().toISOString()});
+ try{setUser();renderFavorites();if(lastTarget&&$(lastTarget))renderCurrentResults($(lastTarget));}
+ catch(e){alert('Não foi possível salvar os favoritos. O armazenamento do navegador pode estar cheio.')}
+}
+function removeFavorite(encodedKey){
+ if(!user)return;const key=decodeURIComponent(encodedKey);
+ user.favorites=(user.favorites||[]).filter(x=>favoriteKey(x)!==key);
+ setUser();renderFavorites();
+ if(lastTarget&&$(lastTarget)&&lastResults.length)renderCurrentResults($(lastTarget));
+}
+function favoriteAction(item,index){
+ const saved=isFavorite(item);
+ return `<button class="favorite-btn ${saved?'saved':''}" onclick="toggleFavorite(${index})" aria-label="${saved?'Remover dos favoritos':'Adicionar aos favoritos'}">${saved?'♥ Salvo':'☆ Favoritar'}</button>`;
+}
+function renderFavorites(){
+ const box=$('favoritesList');if(!box||!user)return;
+ const items=user.favorites||[],count=$('favoritesCount');if(count)count.textContent=String(items.length);if($('homeFavoriteTotal'))$('homeFavoriteTotal').textContent=String(items.length);
+ if(!items.length){box.innerHTML='<div class="empty-state">Você ainda não salvou instituições. Pesquise uma escola e toque em “☆ Favoritar”.</div>';return}
+ box.innerHTML=items.map((x,i)=>`<article class="school"><div class="row between"><h3>${i+1}. ${safe(x.name)}</h3><span class="tag">${typeLabel(x.type)}</span></div>${x.distance!=null?`<p><strong>${distanceLabel(x.distance)} de distância aproximada</strong></p>`:''}<p>${safe(x.address||'Endereço não informado no mapa')}</p>${ratingHtml(x)}<div class="row"><button class="secondary" onclick="focusPoint(${Number(x.lat)},${Number(x.lon)})">Ver no mapa</button><button class="favorite-btn saved" onclick="removeFavorite('${encodeURIComponent(favoriteKey(x))}')">♥ Remover</button></div></article>`).join('');
+}
+function institutionOwnership(tags){
+ const raw=String(tags['operator:type']||tags.ownership||tags['school:ownership']||'').toLowerCase();
+ if(/public|government|municipal|state|federal|públic/.test(raw))return 'public';
+ if(/private|particular/.test(raw))return 'private';
+ return 'unknown';
+}
+function ownershipLabel(value){return value==='public'?'Pública':value==='private'?'Particular':'Rede não informada'}
+function filterOwnership(items){
+ const selected=$('ownership')?.value||'all';
+ if(selected==='all')return items;
+ return items.filter(x=>x.ownership===selected);
+}
+const CURIOSITY_REFRESH_KEY='s4edu_curiosity_last_refresh';
+const CURIOSITY_SCHOOLS_KEY='s4edu_curiosity_osm_schools';
+let curiosityTimer=null;
+function checkCuriosityRefresh(){
+ const last=Number(localStorage.getItem(CURIOSITY_REFRESH_KEY)||0);
+ if(!last || Date.now()-last>24*60*60*1000) refreshCuriosities(true);
+ if(!curiosityTimer) curiosityTimer=setInterval(()=>{if(!$('page-curiosities').classList.contains('hidden'))refreshCuriosities(true)},6*60*60*1000);
+}
+async function refreshCuriosities(silent=false){
+ const city=$('curiosityCity').value.trim()||'Gravataí, RS';
+ const status=$('curiosityStatus');
+ const list=$('curiosityLiveList');
+ if(status)status.textContent='Consultando escolas no mapa colaborativo…';
+ if(list)list.innerHTML='<p class="muted small">Carregando instituições…</p>';
+ try{
+  // A busca de escolas é baseada em dados abertos do OpenStreetMap para a cidade informada.
+  const geoUrl='https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q='+encodeURIComponent(city+', Brasil');
+  const geoResp=await fetch(geoUrl,{headers:{'Accept':'application/json'}});
+  if(!geoResp.ok)throw new Error('Não foi possível localizar a cidade.');
+  const geo=await geoResp.json();
+  if(!geo.length)throw new Error('Cidade não encontrada. Confira o nome e tente novamente.');
+  const lat=Number(geo[0].lat),lon=Number(geo[0].lon);
+  const query='[out:json][timeout:25];(node["amenity"="school"](around:15000,'+lat+','+lon+');way["amenity"="school"](around:15000,'+lat+','+lon+');relation["amenity"="school"](around:15000,'+lat+','+lon+');node["amenity"="college"](around:15000,'+lat+','+lon+');way["amenity"="college"](around:15000,'+lat+','+lon+'););out center tags;';
+  const api='https://overpass-api.de/api/interpreter?data='+encodeURIComponent(query);
+  const response=await fetch(api);
+  if(!response.ok)throw new Error('O serviço de mapas está temporariamente indisponível.');
+  const data=await response.json();
+  const schools=(data.elements||[]).map(el=>({id:String(el.id),name:el.tags?.name||el.tags?.['name:pt']||'',type:el.tags?.amenity||'school',lat:el.lat??el.center?.lat,lon:el.lon??el.center?.lon})).filter(x=>x.name).sort((a,b)=>a.name.localeCompare(b.name,'pt-BR'));
+  const old=JSON.parse(localStorage.getItem(CURIOSITY_SCHOOLS_KEY)||'[]');
+  const oldIds=new Set(old.map(x=>x.id));
+  const added=schools.filter(x=>!oldIds.has(x.id));
+  localStorage.setItem(CURIOSITY_SCHOOLS_KEY,JSON.stringify(schools));
+  localStorage.setItem(CURIOSITY_REFRESH_KEY,String(Date.now()));
+  const when=new Date().toLocaleString('pt-BR');
+  if($('curiosityUpdated'))$('curiosityUpdated').textContent='Atualizado em '+when;
+  if(status)status.textContent=schools.length+' instituições encontradas em até 15 km de '+city+'. Fonte: OpenStreetMap.';
+  if(list){
+   if(!schools.length)list.innerHTML='<p class="muted small">Nenhuma escola cadastrada foi encontrada nessa região. Isso não significa que não existam escolas por perto.</p>';
+   else list.innerHTML='<p class="small muted">'+schools.length+' instituição(ões) cadastrada(s) no OpenStreetMap:</p>'+schools.slice(0,35).map(x=>'<div class="curiosity-item"><div><strong>'+escapeHtml(x.name)+'</strong><p class="small muted">'+(x.type==='college'?'Faculdade / ensino superior':'Escola')+'</p></div><a target="_blank" rel="noopener" href="https://www.openstreetmap.org/'+(x.id.startsWith('n')?'node':x.id.startsWith('w')?'way':'relation')+'/'+x.id.replace(/^[nwr]/,'')+'">Ver mapa ↗</a></div>').join('');
+  }
+  if(!silent && 'Notification' in window && Notification.permission==='granted')new Notification('S4 EDU: curiosidades atualizadas',{body:schools.length+' instituições encontradas em '+city+'.'});
+  if(silent && added.length && 'Notification' in window && Notification.permission==='granted')new Notification('Novas escolas encontradas no S4 EDU',{body:added.length+' novo(s) cadastro(s) no OpenStreetMap para '+city+'.'});
+ }catch(err){
+  if(status)status.textContent=err.message||'Não foi possível atualizar agora. Tente novamente mais tarde.';
+  if(list)list.innerHTML='<p class="muted small">Não foi possível consultar a lista ao vivo. Verifique a internet e tente novamente.</p>';
+ }
+}
+function escapeHtml(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+async function enableCuriosityAlerts(){
+ if(!('Notification' in window)){alert('Este navegador não oferece notificações.');return}
+ const permission=await Notification.requestPermission();
+ if(permission==='granted'){alert('Notificações ativadas! O S4 EDU avisará sobre novos cadastros encontrados quando a aba estiver aberta e conseguir atualizar.');if(!$('page-curiosities').classList.contains('hidden'))refreshCuriosities()}
+ else alert('As notificações não foram autorizadas. Você ainda pode consultar a aba manualmente.');
+}
+function saveResume(){user.resume={education:$('rEducation').value,school:$('rSchool').value,courses:$('rCourses').value,certificates:$('rCertificates').value,languages:$('rLanguages').value,skills:$('rSkills').value,projects:$('rProjects').value,goals:$('rGoals').value};setUser();alert('Currículo salvo!')}
+function loadResume(){const r=user.resume||{};for(const [id,k] of Object.entries({rEducation:'education',rSchool:'school',rCourses:'courses',rCertificates:'certificates',rLanguages:'languages',rSkills:'skills',rProjects:'projects',rGoals:'goals'}))$(id).value=r[k]||''}
+function printResume(){
+ saveResume();
+ const r=user.resume||{};
+ const w=window.open('','_blank');
+ if(!w){alert('Permita pop-ups para gerar o PDF.');return}
+ const esc=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const sections=[['Formação',r.education],['Instituição',r.school],['Cursos',r.courses],['Certificados',r.certificates],['Idiomas',r.languages],['Habilidades',r.skills],['Projetos e experiências',r.projects],['Objetivos',r.goals]];
+ const body=sections.map(([label,value])=>`<h2>${label}</h2><p>${esc(value)}</p>`).join('');
+ w.document.write(`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Currículo estudantil</title><style>body{font:15px Arial,sans-serif;padding:40px;color:#172033}h1{color:#2457e6}h2{margin:22px 0 5px;font-size:16px}p{white-space:pre-wrap}</style></head><body><h1>${esc(user.name)}</h1><p>${esc(user.email)}</p>${body}<script>window.onload=()=>window.print()<\\/script></body></html>`);
+ w.document.close();
+}
+function initMap(){
+  if(map)return;
+  if(!window.L){const el=$('mapStatus');if(el)el.textContent='Biblioteca do mapa não carregou. Confira a internet e recarregue a página.';return}
+  map=L.map('map',{preferCanvas:true,zoomControl:true}).setView([-30.03,-51.23],10);
+  // Usa o endereço oficial dos tiles OSM e mantém a atribuição visível.
+  const osmLayer=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{
+    attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>',
+    maxZoom:19,
+    maxNativeZoom:19,
+    updateWhenIdle:true,
+    keepBuffer:2
+  }).addTo(map);
+  osmLayer.on('tileerror',(event)=>{const el=$('mapStatus');if(el){const failed=event&&event.tile&&event.tile.src?event.tile.src:'';el.textContent='Um bloco do mapa falhou ao carregar. Confira a conexão e toque em “Atualizar mapa”.'+(failed?' (bloco: '+failed.split('/').slice(-3).join('/')+')':'');}});
+  osmLayer.on('load',()=>{const el=$('mapStatus');if(el&&el.textContent.includes('carregaram'))el.textContent='Mapa carregado · dados colaborativos OpenStreetMap';});
+  L.control.scale({metric:true,imperial:false,position:'bottomleft'}).addTo(map);
+  if(lastCenter)map.setView(lastCenter,13);
+  drawMarkers();
+}
+function refreshMap(){
+  if(!map)initMap();
+  if(!map)return;
+  map.invalidateSize(true);
+  map.eachLayer(layer=>{if(layer instanceof L.TileLayer)layer.redraw()});
+  const status=$('mapStatus');
+  if(status)status.textContent='Atualizando os blocos visíveis do mapa…';
+  setTimeout(()=>{if(status&&status.textContent.includes('Atualizando'))status.textContent='Mapa atualizado na tela. A base cartográfica é mantida pela comunidade OpenStreetMap.';},1200);
+}
+function clearMarkers(){if(!map)return;markers.forEach(m=>map.removeLayer(m));markers=[]}
+function schoolMarkerIcon(x){
+  const emoji=['university'].includes(String(x.type).toLowerCase())?'🏛️':['college'].includes(String(x.type).toLowerCase())?'🎓':'🏫';
+  return L.divIcon({className:'school-map-marker',html:'<span role="img" aria-label="'+safeAttr(typeLabel(x.type))+'"><i>'+emoji+'</i></span>',iconSize:[40,40],iconAnchor:[20,34],popupAnchor:[0,-31]});
+}
+function mapPopupHtml(x,index){
+  const key=ratingKey(x),rating=Number(user?.ratings?.[key]||0);
+  const stars='★'.repeat(rating)+'☆'.repeat(5-rating);
+  return `<div class="map-school-popup"><strong>${safe(x.name)}</strong><div>${safe(typeLabel(x.type))}</div><div class="map-stars" aria-label="${rating} de 5 estrelas na avaliação S4 EDU">${stars}</div><small>${rating?rating+'/5 · avaliação S4 EDU neste aparelho':'Sem avaliação S4 EDU ainda'}</small><br><a href="${safeAttr(googleMapsSearchUrl(x))}" target="_blank" rel="noopener">⭐ Ver nota e avaliações no Google Maps ↗</a><br><button class="secondary" style="margin-top:8px" onclick="showSchoolDetails(${index})">Ver detalhes da escola</button></div>`;
+}
+function drawMarkers(){
+  if(!map)return;clearMarkers();
+  lastResults.forEach((x,i)=>{
+    if(!Number.isFinite(Number(x.lat))||!Number.isFinite(Number(x.lon)))return;
+    const marker=L.marker([Number(x.lat),Number(x.lon)],{icon:schoolMarkerIcon(x),title:x.name,alt:typeLabel(x.type),keyboard:true})
+      .addTo(map).bindPopup(mapPopupHtml(x,i),{maxWidth:280,closeButton:true});
+    markers.push(marker);
+  });
+}
+function gpsError(err){
+  const messages={
+    1:'Permissão de localização negada. Libere a localização nas configurações do navegador.',
+    2:'O dispositivo não conseguiu determinar a posição. Verifique o GPS e tente novamente.',
+    3:'O GPS demorou para responder. Mantenha o app aberto e tente novamente.'
+  };
+  const msg=messages[err.code]||'Não foi possível obter a localização.';
+  const status=$('mapStatus');if(status)status.textContent=msg;
+}
+function updateGPSPosition(pos){
+  const lat=pos.coords.latitude,lon=pos.coords.longitude,accuracy=pos.coords.accuracy||0;
+  lastCenter=[lat,lon];
+  if(!map)initMap();
+  if(map){
+    const point=[lat,lon];
+    if(!gpsMarker)gpsMarker=L.circleMarker(point,{radius:9,color:'#fff',weight:3,fillColor:'#1769ff',fillOpacity:1}).addTo(map).bindPopup('Sua localização em tempo real');
+    else gpsMarker.setLatLng(point);
+    if(!gpsAccuracyCircle)gpsAccuracyCircle=L.circle(point,{radius:accuracy,color:'#1769ff',weight:1,opacity:.45,fillColor:'#1769ff',fillOpacity:.08}).addTo(map);
+    else gpsAccuracyCircle.setLatLng(point).setRadius(accuracy);
+    map.setView(point,Math.max(map.getZoom(),14));
+  }
+  const status=$('mapStatus');
+  if(status)status.textContent='GPS ativo · precisão aproximada de '+Math.round(accuracy)+' m · atualizado às '+new Date().toLocaleTimeString('pt-BR');
+  // Refresh nearby institutions only after meaningful movement or 60 seconds.
+  const now=Date.now();
+  const moved=!lastGpsSearchPoint||distanceMeters(lastGpsSearchPoint[0],lastGpsSearchPoint[1],lat,lon)>600;
+  if(moved||now-lastGpsSearchTime>60000){
+    lastGpsSearchPoint=[lat,lon];lastGpsSearchTime=now;
+    searchAround(lat,lon,'gpsResults');
+  }
+}
+function distanceMeters(lat1,lon1,lat2,lon2){
+  const rad=x=>x*Math.PI/180,R=6371000;
+  const dLat=rad(lat2-lat1),dLon=rad(lon2-lon1);
+  const a=Math.sin(dLat/2)**2+Math.cos(rad(lat1))*Math.cos(rad(lat2))*Math.sin(dLon/2)**2;
+  return 2*R*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+function distanceLabel(meters){
+  return meters<1000?Math.round(meters)+' m':(meters/1000).toFixed(1).replace('.',',')+' km';
+}
+function startLiveGPS(){
+  if(!navigator.geolocation){alert('Este navegador não oferece geolocalização.');return}
+  if(!window.isSecureContext){alert('Para usar o GPS, abra o S4 EDU por um endereço HTTPS ou localhost. Abrir o arquivo diretamente pode bloquear a localização.');}
+  go('map');
+  setTimeout(()=>{initMap();if(map)map.invalidateSize()},180);
+  if(gpsWatchId!==null)navigator.geolocation.clearWatch(gpsWatchId);
+  const status=$('mapStatus');if(status)status.textContent='Solicitando permissão do GPS...';
+  gpsWatchId=navigator.geolocation.watchPosition(
+    updateGPSPosition,
+    gpsError,
+    {enableHighAccuracy:true,timeout:20000,maximumAge:3000}
+  );
+}
+function stopLiveGPS(){
+  if(gpsWatchId!==null){navigator.geolocation.clearWatch(gpsWatchId);gpsWatchId=null}
+  const status=$('mapStatus');if(status)status.textContent='GPS pausado. Sua posição não está mais sendo atualizada.';
+}
+async function locate(){startLiveGPS()}
+async function fetchWithTimeout(url,options={},timeoutMs=9000){
+  const controller=new AbortController();
+  const timer=setTimeout(()=>controller.abort(),timeoutMs);
+  try{return await fetch(url,{...options,signal:controller.signal})}
+  finally{clearTimeout(timer)}
+}
+async function geocodePlace(q){
+  const clean=String(q||'').trim().replace(/\s+/g,' ');
+  if(!clean) throw Error('Digite uma cidade ou bairro.');
+  const variants=[];
+  // Consultar primeiro com Brasil evita que um nome comum caia em outro país.
+  variants.push(/\b(brasil|brazil)\b/i.test(clean)?clean:clean+', Brasil');
+  if(variants[0]!==clean) variants.push(clean);
+  const neighborhoodPattern=/\b(bairro|vila|jardim|centro|distrito|zona|parque|loteamento)\b/i;
+  const isNeighborhood=neighborhoodPattern.test(clean);
+  const localityTypes=new Set(['city','town','village','municipality','suburb','neighbourhood','quarter','district','locality','hamlet']);
+  let hadNetworkError=false;
+
+  // Photon: aceita apenas resultados identificados como localidade e, quando
+  // houver país informado, somente resultados brasileiros.
+  for(const term of variants){
+    try{
+      const url='https://photon.komoot.io/api/?q='+encodeURIComponent(term)+'&limit=20&lang=pt';
+      const response=await fetchWithTimeout(url,{headers:{'Accept':'application/json'}},9000);
+      if(!response.ok) throw Error('Photon HTTP '+response.status);
+      const data=await response.json();
+      const ranked=(data.features||[]).map(feature=>{
+        const props=feature.properties||{};
+        const value=String(props.osm_value||props.type||'').toLowerCase();
+        const key=String(props.osm_key||'').toLowerCase();
+        const country=String(props.country||'').toLowerCase();
+        if(country && !/brasil|brazil/.test(country)) return null;
+        if(!localityTypes.has(value)) return null;
+        let score=50;
+        if(key==='place') score+=35;
+        if(isNeighborhood && /suburb|neighbourhood|quarter|district/.test(value)) score+=30;
+        if(!isNeighborhood && /city|town|village|municipality/.test(value)) score+=30;
+        if(props.state && /rio grande do sul|\brs\b/i.test(props.state)) score+=5;
+        return {feature,score};
+      }).filter(Boolean).sort((a,b)=>b.score-a.score);
+      if(ranked.length){
+        const feature=ranked[0].feature;
+        const coords=feature.geometry?.coordinates;
+        const lon=Number(coords?.[0]),lat=Number(coords?.[1]);
+        if(Number.isFinite(lat)&&Number.isFinite(lon)){
+          const props=feature.properties||{};
+          return {lat,lon,label:[props.name,props.city||props.district,props.state].filter(Boolean).join(', ')};
+        }
+      }
+    }catch(error){hadNetworkError=true;}
+  }
+
+  // Nominatim: segunda fonte, limitada ao Brasil e com preferência por
+  // resultados cujo tipo seja realmente cidade ou bairro.
+  for(const term of variants){
+    try{
+      const url='https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=15&countrycodes=br&accept-language=pt-BR&q='+encodeURIComponent(term);
+      const response=await fetchWithTimeout(url,{headers:{'Accept':'application/json'}},9000);
+      if(!response.ok) throw Error('Nominatim HTTP '+response.status);
+      const rows=await response.json();
+      const ranked=(rows||[]).map(item=>{
+        const type=String(item.type||'').toLowerCase();
+        const address=item.address||{};
+        const locality=address.city||address.town||address.village||address.municipality||address.suburb||address.neighbourhood||address.city_district;
+        let score=locality?40:0;
+        if(localityTypes.has(type)) score+=40;
+        if(isNeighborhood && /suburb|neighbourhood|quarter|district/.test(type)) score+=25;
+        if(!isNeighborhood && /city|town|village|municipality/.test(type)) score+=25;
+        return {item,score};
+      }).filter(result=>result.score>0).sort((a,b)=>b.score-a.score);
+      if(ranked.length){
+        const item=ranked[0].item;
+        const lat=Number(item.lat),lon=Number(item.lon);
+        if(Number.isFinite(lat)&&Number.isFinite(lon)) return {lat,lon,label:item.display_name||clean};
+      }
+    }catch(error){hadNetworkError=true;}
+  }
+  if(hadNetworkError) throw Error('Não consegui consultar os serviços de localização. Confira a conexão e tente novamente.');
+  throw Error('Não encontrei essa cidade ou bairro no Brasil. Tente informar também o município e a sigla do estado, por exemplo: Centro, Viamão, RS.');
+}
+async function searchCity(inputId){
+  const q=$(inputId).value.trim();
+  if(!q){alert('Digite uma cidade, bairro ou instituição.');return}
+  const box=inputId==='quickCity'?'nearbyResults':'searchResults';
+  lastTarget=box;
+  $(box).innerHTML='<p class="muted">Pesquisando instituições para "'+safe(q)+'"...</p>';
+  try{
+    // Prioriza cidade/bairro para evitar que uma escola com nome parecido
+    // seja confundida com a localidade pesquisada.
+    try{
+      const p=await geocodePlace(q);
+      lastCenter=[p.lat,p.lon];
+      await searchAround(p.lat,p.lon,box);
+      return;
+    }catch(placeError){
+      const found=await searchInstitutionName(q,box);
+      if(found) return;
+      throw placeError;
+    }
+  }catch(e){
+    const suggested=await showPlaceSuggestions(q,box);
+    if(!suggested)$(box).innerHTML='<p class="muted">'+safe(e.message)+'</p><button class="ghost" onclick="searchCity(\''+inputId+'\')">Tentar novamente</button>';
+  }
+}
+
+async function searchInstitutionName(term,target){
+  const clean=String(term||'').trim().slice(0,80);
+  const escaped=clean.replace(/[.*+?^${}()|[\]\\]/g,'\\$&').replace(/"/g,'\\"');
+  const query='[out:json][timeout:18];(nwr["amenity"~"^(school|college|university|kindergarten|language_school)$"]["name"~"'+escaped+'",i];nwr["education"~"^(school|college|university|kindergarten)$"]["name"~"'+escaped+'",i];nwr["building"~"^(school|college|university)$"]["name"~"'+escaped+'",i];);out center tags 100;';
+  const kind=$('kind')?.value||'all';
+  const normalize=(rows)=>{
+    const seen=new Set();
+    return rows.map(x=>({
+      ...x,
+      type:x.type||'school',
+      ownership:x.ownership||'unknown'
+    })).filter(x=>Number.isFinite(Number(x.lat))&&Number.isFinite(Number(x.lon)))
+      .filter(x=>kind==='all'||(kind==='college'?['college','university'].includes(x.type):!['college','university'].includes(x.type)))
+      .filter(x=>{const k=String(x.name||'').toLowerCase()+'|'+Number(x.lat).toFixed(4)+'|'+Number(x.lon).toFixed(4);if(seen.has(k))return false;seen.add(k);return true});
+  };
+  try{
+    let data=null;
+    try{data=await fetchOverpass(query)}catch(overpassError){console.warn('Overpass indisponível; usando busca alternativa:',overpassError)}
+    let matches=normalize((data?.elements||[]).map(e=>{
+      const t=e.tags||{},lat=e.lat??e.center?.lat,lon=e.lon??e.center?.lon;
+      const type=t.amenity||t.education||t.building||'school';
+      return {name:t.name||t['name:pt']||'Instituição sem nome',type,lat:Number(lat),lon:Number(lon),
+        address:[t['addr:street'],t['addr:housenumber'],t['addr:suburb'],t['addr:city']].filter(Boolean).join(', '),
+        website:t.website||t['contact:website']||'',phone:t.phone||t['contact:phone']||'',ownership:institutionOwnership(t),...schoolMetadata(t)};
+    }));
+    // Segunda fonte: Photon, para não depender exclusivamente dos servidores Overpass.
+    if(!matches.length){
+      const response=await fetchWithTimeout('https://photon.komoot.io/api/?q='+encodeURIComponent(clean)+'&limit=30&lang=pt',{headers:{'Accept':'application/json'}},9000);
+      if(!response.ok)throw Error('A busca alternativa respondeu HTTP '+response.status);
+      const payload=await response.json();
+      const features=(payload.features||[]).filter(f=>{
+        const props=f.properties||{},key=String(props.osm_key||'').toLowerCase(),value=String(props.osm_value||'').toLowerCase();
+        return /^(amenity|education|building|office)$/.test(key)&&/school|college|university|kindergarten|educational/.test(value)&&props.name;
+      }).map(f=>{
+        const props=f.properties||{},coords=f.geometry?.coordinates||[];
+        return {name:props.name,type:props.osm_value||'school',lat:Number(coords[1]),lon:Number(coords[0]),
+          address:[props.street,props.housenumber,props.district||props.suburb,props.city].filter(Boolean).join(', '),
+          website:'',phone:'',ownership:'unknown',studentCount:'',subjects:[]};
+      });
+      matches=normalize(features);
+    }
+    if(!matches.length)return false;
+    const ownershipFiltered=filterOwnership(matches);
+    lastResults=ownershipFiltered;
+    if(!lastResults.length)return false;
+    lastCenter=[matches[0].lat,matches[0].lon];
+    if(map){map.setView(lastCenter,12);drawMarkers()}
+    const status=$('mapStatus');
+    if(status)status.textContent=lastResults.length+' instituição(ões) encontradas pelo nome';
+    $(target).innerHTML='<p class="muted small">'+lastResults.length+' instituição(ões) encontrada(s). Os dados de localização vêm do OpenStreetMap/Photon.</p>'+
+      lastResults.map((x,i)=>`<article class="school"><div class="row between"><h3>${i+1}. ${safe(x.name)}</h3><span class="tag">${typeLabel(x.type)}</span></div><p class="small muted">${ownershipLabel(x.ownership)}</p>${ratingHtml(x)}<p>${safe(x.address||'Endereço não informado no mapa')}</p>${communityHtml(x)}${x.phone?`<p>Telefone: ${safe(x.phone)}</p>`:''}${x.website?`<p><a href="${safeAttr(x.website)}" target="_blank" rel="noopener">Site da instituição ↗</a></p>`:''}<div class="row"><button class="secondary" onclick="focusPoint(${x.lat},${x.lon})">Ver no mapa</button><button class="ghost" onclick="showSchoolDetails(${i})">Detalhes e matérias</button>${favoriteAction(x,i)}</div></article>`).join('');
+    return true;
+  }catch(err){
+    console.warn('Busca por nome indisponível:',err);
+    return false;
+  }
+}
+async function repeatLastSearch(){
+  if(lastCenter) await searchAround(lastCenter[0],lastCenter[1],lastTarget);
+}
+
+async function fetchOverpass(query){
+  const endpoints=[
+    'https://overpass-api.de/api/interpreter',
+    'https://overpass.kumi.systems/api/interpreter',
+    'https://overpass.private.coffee/api/interpreter'
+  ];
+  let lastError=null;
+  for(const endpoint of endpoints){
+    const controller=new AbortController();
+    const timer=setTimeout(()=>controller.abort(),12000);
+    try{
+      // POST evita URLs excessivamente longas e costuma ser mais estável em buscas amplas.
+      const response=await fetch(endpoint,{
+        method:'POST',
+        headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8','Accept':'application/json'},
+        body:'data='+encodeURIComponent(query),
+        signal:controller.signal
+      });
+      if(!response.ok)throw Error('Servidor de mapa respondeu HTTP '+response.status);
+      const data=await response.json();
+      if(!data||!Array.isArray(data.elements))throw Error('Resposta inválida do serviço de mapas');
+      return data;
+    }catch(e){lastError=e}
+    finally{clearTimeout(timer)}
+  }
+  throw lastError||Error('Serviços de mapa indisponíveis');
+}
+async function searchAround(lat,lon,target='nearbyResults'){
+  lastCenter=[lat,lon];lastTarget=target;
+  const kind=$('kind')?.value||'all';
+  const selectedRadius=Number($('radius')?.value||12000);
+  const radii=[selectedRadius,...([12000,25000,50000].filter(r=>r>selectedRadius))];
+  const box=$(target);
+  if(box)box.innerHTML='<p class="muted">Buscando instituições mais próximas de você…</p>';
+  try{
+    let data=null,usedRadius=selectedRadius;
+    for(let i=0;i<radii.length;i++){
+      usedRadius=radii[i];
+      const query='[out:json][timeout:18];(nwr["amenity"~"^(school|college|university|kindergarten|language_school)$"](around:'+usedRadius+','+lat+','+lon+');nwr["education"~"^(school|college|university|kindergarten)$"](around:'+usedRadius+','+lat+','+lon+'););out center tags 400;';
+      data=await fetchOverpass(query);
+      if((data.elements||[]).length)break;
+    }
+    const seen=new Set();
+    const items=(data?.elements||[]).map(e=>{
+      const t=e.tags||{},la=e.lat??e.center?.lat,lo=e.lon??e.center?.lon;
+      const type=t.amenity||((t.education==='university'||t.building==='university')?'university':((t.education==='college'||t.building==='college')?'college':'school'));
+      return {
+        name:t.name||t['name:pt']||'Instituição sem nome',type,
+        lat:Number(la),lon:Number(lo),
+        distance:distanceMeters(lat,lon,Number(la),Number(lo)),
+        address:[t['addr:street'],t['addr:housenumber'],t['addr:suburb'],t['addr:city']].filter(Boolean).join(', '),
+        website:t.website||t['contact:website']||'',
+        phone:t.phone||t['contact:phone']||'',
+        ownership:institutionOwnership(t),...schoolMetadata(t)
+      };
+    }).filter(x=>Number.isFinite(x.lat)&&Number.isFinite(x.lon))
+      .filter(x=>{
+        const k=x.name.toLowerCase()+'|'+x.lat.toFixed(4)+'|'+x.lon.toFixed(4);
+        if(seen.has(k))return false;seen.add(k);return true;
+      }).sort((a,b)=>a.distance-b.distance);
+    lastResults=filterOwnership(items.filter(x=>kind==='all'||(kind==='college'?['college','university'].includes(x.type):!['college','university'].includes(x.type))));
+    if(map){map.setView([lat,lon],13);drawMarkers()}
+    const status=$('mapStatus');
+    if(status)status.textContent=lastResults.length+' instituições encontradas · ordenadas pela proximidade';
+    const expanded=usedRadius>selectedRadius;
+    const intro=expanded?'Não encontramos opções no raio inicial. Ampliamos a busca para '+(usedRadius/1000)+' km para mostrar mais resultados.':'Resultados mais próximos primeiro.';
+    const resultsHtml=lastResults.slice(0,60).map((x,i)=>
+      `<article class="school"><div class="row between"><h3>${i+1}. ${safe(x.name)}</h3><span class="tag">${typeLabel(x.type)}</span></div><p><strong>${distanceLabel(x.distance)} de distância aproximada</strong> · ${ownershipLabel(x.ownership)}</p>${ratingHtml(x)}<p>${safe(x.address||'Endereço não informado no mapa')}</p>${communityHtml(x)}${x.phone?`<p>Telefone: ${safe(x.phone)}</p>`:''}${x.website?`<p><a href="${safeAttr(x.website)}" target="_blank" rel="noopener">Site da instituição ↗</a></p>`:''}<div class="row"><button class="secondary" onclick="focusPoint(${x.lat},${x.lon})">Ver no mapa</button><button class="ghost" onclick="showSchoolDetails(${i})">Detalhes e matérias</button>${favoriteAction(x,i)}</div></article>`
+    ).join('');
+    if(box)box.innerHTML=(lastResults.length?`<p class="muted small">${intro} Encontramos ${lastResults.length} instituição(ões). A rede pública/particular só aparece quando essa informação está cadastrada no mapa.</p>`:'<p class="muted">Não encontramos instituições com esses filtros. Tente “Pública e particular”, aumentar a distância ou pesquisar outra cidade. A cobertura depende dos dados disponíveis no OpenStreetMap.</p>')+resultsHtml;
+  }catch(e){
+    if(typeof miauReportError==='function')miauReportError('instituicoes',e?.message||'Falha ao buscar instituições');
+    console.warn('Erro na pesquisa S4 EDU:',e);
+    if(box)box.innerHTML='<p class="muted">A busca está temporariamente indisponível. Confira a internet e tente novamente.</p><button class="ghost" onclick="searchAround('+lat+','+lon+',\''+target+'\')">Tentar novamente</button>';
+    const status=$('mapStatus');if(status)status.textContent='Não foi possível carregar as instituições agora.';
+  }
+}
+
+// Configure estes dois valores depois de criar o projeto Supabase.
+// A chave anon pode ficar no navegador; NUNCA coloque a service_role aqui.
+const S4_SUPABASE_URL = '';
+const S4_SUPABASE_ANON_KEY = '';
+function schoolMetadata(tags){
+  const t=tags||{};
+  const rawCount=t.students||t['student:count']||t['school:students']||t.pupils||t.capacity;
+  const studentCount=rawCount&&/^\d[\d., ]*$/.test(String(rawCount).trim())?String(rawCount).trim():'';
+  const rawSubjects=t['school:subjects']||t['education:subjects']||t.subjects||t.curriculum||'';
+  const subjects=String(rawSubjects).split(/[;,|]/).map(v=>v.trim()).filter(Boolean).slice(0,30);
+  const rawInep=t['ref:inep']||t['ref:INEP']||t['inep:code']||'';
+  const inepCode=/^\d{8}$/.test(String(rawInep).trim())?String(rawInep).trim():'';
+  return {studentCount,subjects,inepCode,metadataSource:(studentCount||subjects.length)?'OpenStreetMap':'unavailable'};
+}
+async function getOfficialSchoolStats(inepCode){
+  if(!inepCode||!S4_SUPABASE_URL||!S4_SUPABASE_ANON_KEY)return null;
+  const url=S4_SUPABASE_URL.replace(/\/$/,'')+'/rest/v1/school_statistics?inep_code=eq.'+encodeURIComponent(inepCode)+'&select=students_total,subjects,reference_year,source_url,updated_at&limit=1';
+  const response=await fetch(url,{headers:{apikey:S4_SUPABASE_ANON_KEY,Authorization:'Bearer '+S4_SUPABASE_ANON_KEY,Accept:'application/json'}});
+  if(!response.ok)throw new Error('Não foi possível consultar a base oficial agora.');
+  const rows=await response.json();return rows[0]||null;
+}
+function showSchoolDetails(index){
+  const x=lastResults[index];if(!x)return;
+  let modal=document.getElementById('schoolDetailsModal');
+  if(!modal){modal=document.createElement('div');modal.id='schoolDetailsModal';modal.style.cssText='position:fixed;inset:0;background:#10182899;z-index:9999;display:grid;place-items:center;padding:16px';document.body.appendChild(modal)}
+  modal.innerHTML=`<section role="dialog" aria-modal="true" aria-label="Detalhes da instituição" style="background:var(--card,#fff);color:var(--text,#101828);width:min(620px,100%);max-height:85vh;overflow:auto;border-radius:18px;padding:22px;box-shadow:0 18px 60px #0004"><div class="row between"><h2 style="margin:0">${safe(x.name)}</h2><button class="ghost" onclick="document.getElementById('schoolDetailsModal').remove()" aria-label="Fechar">✕</button></div><p class="muted">${safe(typeLabel(x.type))} · ${safe(x.address||'Endereço não informado')}</p><p id="officialStatsStatus" class="small muted">Consultando dados oficiais do INEP…</p><div class="cards" style="grid-template-columns:1fr 1fr;margin:16px 0"><div class="stat"><strong id="officialStudentCount">${x.studentCount?Number(x.studentCount).toLocaleString('pt-BR')+' alunos':'Não informado'}</strong><span class="small">Total de alunos</span></div><div class="stat"><strong id="officialSubjectCount">${x.subjects?.length||'—'}</strong><span class="small">Matérias cadastradas</span></div></div><h3>Matérias oferecidas</h3><ul id="officialSubjects">${x.subjects?.length?x.subjects.map(v=>'<li>'+safe(v)+'</li>').join(''):'<li>Não informado na fonte consultada.</li>'}</ul><p class="small muted">Os dados oficiais são exibidos conforme a edição mais recente publicada. O Censo Escolar é anual; a verificação mensal não significa que o INEP publique novos números todo mês.</p><p id="officialStatsSource" class="small muted">${x.inepCode?'Código INEP: '+safe(x.inepCode):'Esta ficha ainda não tem código INEP associado. Não faremos associação automática apenas pelo nome para evitar dados de outra escola.'}</p><div class="row"><a class="google-link" href="${safeAttr(googleMapsSearchUrl(x))}" target="_blank" rel="noopener">Abrir no Google Maps ↗</a>${x.website?`<a class="google-link" href="${safeAttr(x.website)}" target="_blank" rel="noopener">Site da escola ↗</a>`:''}</div></section>`;
+  modal.addEventListener('click',e=>{if(e.target===modal)modal.remove()});
+  if(x.inepCode&&S4_SUPABASE_URL&&S4_SUPABASE_ANON_KEY){
+    getOfficialSchoolStats(x.inepCode).then(stats=>{
+      if(!document.getElementById('schoolDetailsModal'))return;
+      const status=document.getElementById('officialStatsStatus');
+      if(!stats){status.textContent='Ainda não há registro desta escola na base oficial sincronizada.';return}
+      document.getElementById('officialStudentCount').textContent=stats.students_total==null?'Não informado':Number(stats.students_total).toLocaleString('pt-BR')+' alunos';
+      const subjects=Array.isArray(stats.subjects)?stats.subjects:[];
+      document.getElementById('officialSubjectCount').textContent=subjects.length||'—';
+      document.getElementById('officialSubjects').innerHTML=subjects.length?subjects.map(v=>'<li>'+safe(v)+'</li>').join(''):'<li>Não informado na fonte oficial.</li>';
+      status.textContent='Dados do Censo Escolar · edição '+stats.reference_year+' · sincronizado em '+new Date(stats.updated_at).toLocaleDateString('pt-BR');
+      document.getElementById('officialStatsSource').innerHTML='Código INEP: '+safe(x.inepCode)+' · <a href="'+safeAttr(stats.source_url)+'" target="_blank" rel="noopener">Fonte oficial ↗</a>';
+    }).catch(()=>{const status=document.getElementById('officialStatsStatus');if(status)status.textContent='Não foi possível consultar a base sincronizada. As informações abaixo podem estar incompletas.'});
+  }else{
+    const status=document.getElementById('officialStatsStatus');if(status)status.textContent='Integração oficial ainda não configurada ou código INEP ausente.';
+  }
+}
+function ratingKey(x){return String(x.name||'').toLowerCase().trim()+'|'+Number(x.lat).toFixed(4)+'|'+Number(x.lon).toFixed(4)}
+function ratingHtml(x){
+  const key=ratingKey(x),value=Number(user?.ratings?.[key]||0);
+  const stars=[1,2,3,4,5].map(n=>`<button class="star-btn ${n<=value?'selected':''}" aria-label="Avaliar com ${n} estrelas" title="Avaliar com ${n} estrelas" onclick="rateInstitution('${encodeURIComponent(key)}',${n})">★</button>`).join('');
+  return `<div class="rating-row"><span class="small muted">Sua avaliação:</span>${stars}<span class="small muted">${value?value+'/5':'Ainda não avaliada'}</span></div><p class="small muted">Sua avaliação pessoal salva somente neste navegador; consulte a nota oficial e as fotos no Google Maps pelo link abaixo.</p>`;
+}
+function googleMapsSearchUrl(x){return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent((x.name||'escola')+' '+x.lat+','+x.lon)}
+function communityHtml(x){
+  const key=ratingKey(x),encoded=encodeURIComponent(key),items=(user?.schoolCommunity?.[key]||[]).slice().reverse();
+  const reviews=items.length?items.map(r=>`<div class="community-review"><strong>${safe(r.author||'Usuário S4 EDU')}</strong><p>${safe(r.text||'')}</p>${r.photo?`<img src="${safeAttr(r.photo)}" alt="Foto enviada por usuário" loading="lazy">`:''}<div class="small muted">${safe(r.date||'')}</div></div>`).join(''):'<p class="small muted">Ainda não há comentários nesta escola.</p>';
+  return `<div class="community-box"><strong>💬 Comunidade S4 EDU</strong><p class="small muted">Compartilhe uma experiência respeitosa. Comentários e fotos ficam salvos neste navegador nesta versão.</p><textarea id="school-review-${encoded}" maxlength="600" placeholder="Como é estudar nesta escola?"></textarea><div class="row" style="margin:7px 0"><input id="school-photo-${encoded}" type="file" accept="image/*"><button class="secondary" onclick="submitSchoolReview('${encoded}')">Publicar comentário</button></div>${reviews}</div><p><a class="google-link" href="${safeAttr(googleMapsSearchUrl(x))}" target="_blank" rel="noopener">⭐ Ver nota, avaliações e fotos no Google Maps ↗</a></p>`;
+}
+async function submitSchoolReview(encodedKey){
+  if(!user){alert('Entre na sua conta para comentar.');return}
+  const key=decodeURIComponent(encodedKey),textValue=$('school-review-'+encodedKey)?.value.trim()||'',file=$('school-photo-'+encodedKey)?.files?.[0];
+  if(!textValue&&!file){alert('Escreva um comentário ou escolha uma foto.');return}
+  if(file&&!file.type.startsWith('image/')){alert('Escolha um arquivo de imagem.');return}
+  let photo='';
+  try{
+    if(file){photo=await compressSchoolPhoto(file);}
+    user.schoolCommunity=user.schoolCommunity||{};user.schoolCommunity[key]=user.schoolCommunity[key]||[];
+    user.schoolCommunity[key].push({author:user.name||user.username||'Usuário S4 EDU',text:textValue,photo,date:new Date().toLocaleDateString('pt-BR')});
+    if(user.schoolCommunity[key].length>8)user.schoolCommunity[key]=user.schoolCommunity[key].slice(-8);
+    setUser();
+    if(lastTarget)renderCurrentResults($(lastTarget));
+    alert('Comentário publicado neste navegador. Obrigado por contribuir!');
+  }catch(e){console.error(e);alert('Não foi possível salvar. A imagem pode ser grande demais para o armazenamento do navegador.');}
+}
+function compressSchoolPhoto(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onerror=()=>reject(Error('Falha ao ler imagem'));reader.onload=()=>{const img=new Image();img.onerror=()=>reject(Error('Imagem inválida'));img.onload=()=>{const scale=Math.min(1,720/Math.max(img.width,img.height)),canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(img.width*scale));canvas.height=Math.max(1,Math.round(img.height*scale));canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);const data=canvas.toDataURL('image/jpeg',.62);if(data.length>250000)reject(Error('Imagem muito grande'));else resolve(data)};img.src=reader.result};reader.readAsDataURL(file)});}
+
+function rateInstitution(encodedKey,value){
+  if(!user)return;
+  const key=decodeURIComponent(encodedKey);user.ratings=user.ratings||{};user.ratings[key]=value;
+  try{setUser();}catch(e){alert('Não foi possível salvar a avaliação. O armazenamento do navegador pode estar cheio.');return}
+  alert('Sua avaliação foi salva neste navegador. Obrigado!');
+  if(lastTarget&&lastResults.length){
+    const target=$(lastTarget);if(target){
+      const old=target.innerHTML;
+      // Atualiza apenas os cartões já exibidos, sem repetir a consulta.
+      target.innerHTML=old.replace(/<div class="rating-row">[\s\S]*?<\/p>/g,'');
+      // Re-renderiza os resultados a partir da lista atual.
+      renderCurrentResults(target);
+    }
+  }
+}
+function renderCurrentResults(target){
+  if(!target||!lastResults.length)return;
+  target.innerHTML=lastResults.slice(0,100).map((x,i)=>`<article class="school"><div class="row between"><h3>${i+1}. ${safe(x.name)}</h3><span class="tag">${typeLabel(x.type)}</span></div>${x.distance!=null?`<p><strong>${distanceLabel(x.distance)} de distância aproximada</strong> · ${ownershipLabel(x.ownership)}</p>`:`<p class="small muted">${ownershipLabel(x.ownership)}</p>`}${ratingHtml(x)}<p>${safe(x.address||'Endereço não informado no mapa')}</p>${communityHtml(x)}${x.phone?`<p>Telefone: ${safe(x.phone)}</p>`:''}${x.website?`<p><a href="${safeAttr(x.website)}" target="_blank" rel="noopener">Site da instituição ↗</a></p>`:''}<div class="row"><button class="secondary" onclick="focusPoint(${x.lat},${x.lon})">Ver no mapa</button><button class="ghost" onclick="showSchoolDetails(${i})">Detalhes e matérias</button>${favoriteAction(x,i)}</div></article>`).join('');
+}
+function saveNote(){
+  const title=$('noteTitle').value.trim(),body=$('noteBody').value.trim();
+  if(!title||!body){alert('Preencha o título e o conteúdo da anotação.');return}
+  user.notes=user.notes||[];user.notes.unshift({id:Date.now(),title,body,updated:new Date().toLocaleString('pt-BR')});
+  try{setUser();$('noteTitle').value='';$('noteBody').value='';renderNotes();alert('Anotação salva!')}catch(e){user.notes.shift();alert('Não foi possível salvar. O armazenamento do navegador pode estar cheio.')}
+}
+function clearNoteForm(){$('noteTitle').value='';$('noteBody').value=''}
+function renderNotes(){
+  const box=$('notesList');if(!box||!user)return;
+  const notes=user.notes||[];
+  if($('homeNoteTotal'))$('homeNoteTotal').textContent=String(notes.length);
+  box.innerHTML=notes.length?notes.map(n=>`<article class="saved-item"><h3>${safe(n.title)}</h3><p>${safe(n.body)}</p><span class="small muted">${safe(n.updated||'')}</span><div class="row"><button class="ghost" onclick="editNote(${Number(n.id)})">Editar</button><button class="ghost" onclick="deleteNote(${Number(n.id)})">Excluir</button></div></article>`).join(''):'<p class="muted small">Você ainda não salvou anotações.</p>';
+}
+function editNote(id){
+  const n=(user.notes||[]).find(x=>Number(x.id)===id);if(!n)return;
+  $('noteTitle').value=n.title;$('noteBody').value=n.body;user.notes=user.notes.filter(x=>Number(x.id)!==id);setUser();renderNotes();$('noteTitle').focus();
+}
+function deleteNote(id){if(!confirm('Excluir esta anotação?'))return;user.notes=(user.notes||[]).filter(x=>Number(x.id)!==id);setUser();renderNotes()}
+function saveDocument(){
+  const input=$('documentFile'),file=input.files&&input.files[0];if(!file){alert('Escolha um arquivo primeiro.');return}
+  if(file.size>1024*1024){alert('Este arquivo ultrapassa o limite de 1 MB.');return}
+  const reader=new FileReader();reader.onload=()=>{
+    user.documents=user.documents||[];user.documents.unshift({id:Date.now(),name:file.name,type:file.type||'application/octet-stream',data:reader.result,size:file.size,added:new Date().toLocaleString('pt-BR')});
+    try{setUser();input.value='';renderDocuments();alert('Documento guardado neste navegador!')}catch(e){user.documents.shift();alert('Não foi possível guardar. O armazenamento do navegador pode estar cheio.')}
+  };reader.onerror=()=>alert('Não foi possível ler esse arquivo.');reader.readAsDataURL(file);
+}
+function renderDocuments(){
+  const box=$('documentsList');if(!box||!user)return;const docs=user.documents||[];
+  box.innerHTML=docs.length?docs.map(d=>`<article class="saved-item"><h3>${safe(d.name)}</h3><p class="small muted">${(Number(d.size||0)/1024).toFixed(1)} KB · ${safe(d.added||'')}</p><div class="row"><button class="secondary" onclick="downloadDocument(${Number(d.id)})">Baixar arquivo</button><button class="ghost" onclick="deleteDocument(${Number(d.id)})">Excluir</button></div></article>`).join(''):'<p class="muted small">Nenhum documento guardado ainda.</p>';
+}
+function downloadDocument(id){
+  const d=(user.documents||[]).find(x=>Number(x.id)===id);if(!d)return;
+  const a=document.createElement('a');a.href=d.data;a.download=d.name;document.body.appendChild(a);a.click();a.remove();
+}
+function deleteDocument(id){if(!confirm('Excluir este documento?'))return;user.documents=(user.documents||[]).filter(x=>Number(x.id)!==id);setUser();renderDocuments()}
+async function showPlaceSuggestions(query,target){
+  try{
+    const response=await fetch('https://photon.komoot.io/api/?q='+encodeURIComponent(query)+'&limit=10&lang=pt',{headers:{'Accept':'application/json'}});
+    if(!response.ok)throw Error('Busca indisponível');
+    const data=await response.json(),features=(data.features||[]).filter(f=>f.geometry?.coordinates);
+    if(!features.length)return false;
+    const options=features.map((f,i)=>{
+      const p=f.properties||{},[lon,lat]=f.geometry.coordinates;
+      const label=[p.name,p.city,p.state,p.country].filter(Boolean).join(', ');
+      return `<button class="ghost" style="margin:4px" onclick="choosePlace(${Number(lat)},${Number(lon)},'${safeAttr(label).replace(/'/g,'&#39;')}','${target}')">${safe(label||'Sugestão '+(i+1))}</button>`;
+    }).join('');
+    const box=$(target);if(box)box.innerHTML='<p class="muted">Não encontrei uma correspondência exata. Você quis dizer uma destas opções?</p>'+options;
+    return true;
+  }catch(e){return false}
+}
+function choosePlace(lat,lon,label,target){
+  lastCenter=[lat,lon];if(map){map.setView(lastCenter,13);drawMarkers()}
+  searchAround(lat,lon,target);
+}
+
+function focusPoint(lat,lon){go('map');setTimeout(()=>{initMap();if(map){map.setView([lat,lon],16);drawMarkers()}},200)}
+
+const tutorialSteps=[
+ {emoji:'🔎',title:'Encontre instituições',text:'Pesquise escolas e faculdades pelo nome, cidade ou bairro. Você não precisa ativar o GPS para pesquisar.'},
+ {emoji:'🗺️',title:'Explore o mapa',text:'Veja onde as instituições estão localizadas. Se quiser, ative o GPS para acompanhar sua posição em tempo real.'},
+ {emoji:'⭐',title:'Avalie escolas',text:'Nos resultados, você pode dar uma nota de 1 a 5 estrelas. Suas avaliações ficam salvas neste navegador.'},
+ {emoji:'📝',title:'Organize seus estudos',text:'Monte seu currículo estudantil, escreva anotações e guarde documentos na sua área pessoal.'},
+ {emoji:'👤',title:'Personalize seu perfil',text:'Adicione sua foto, cidade, instituição e uma apresentação. Pronto: agora você já pode aproveitar o S4 EDU!'}
+];
+let tutorialIndex=0;
+function startTutorial(force){
+  if(!user)return;
+  if(!force&&user.tutorialSeen)return;
+  tutorialIndex=0;
+  $('tutorialOverlay').classList.remove('hidden');
+  renderTutorialStep();
+}
+function renderTutorialStep(){
+  const step=tutorialSteps[tutorialIndex],card=$('tutorialCard');
+  card.classList.remove('step-change');void card.offsetWidth;card.classList.add('step-change');
+  $('tutorialEmoji').textContent=step.emoji;
+  $('tutorialTitle').textContent=step.title;
+  $('tutorialText').textContent=step.text;
+  $('tutorialProgress').style.width=((tutorialIndex+1)/tutorialSteps.length*100)+'%';
+  $('tutorialBack').disabled=tutorialIndex===0;
+  $('tutorialNext').textContent=tutorialIndex===tutorialSteps.length-1?'Começar a usar':'Próximo';
+  $('tutorialDots').innerHTML=tutorialSteps.map((_,i)=>`<span class="${i===tutorialIndex?'active':''}"></span>`).join('');
+}
+function tutorialNext(){if(tutorialIndex<tutorialSteps.length-1){tutorialIndex++;renderTutorialStep()}else finishTutorial()}
+function tutorialBack(){if(tutorialIndex>0){tutorialIndex--;renderTutorialStep()}}
+function finishTutorial(){
+  $('tutorialOverlay').classList.add('hidden');
+  if(user){user.tutorialSeen=true;try{setUser()}catch(e){console.warn('Não foi possível salvar a conclusão do tutorial',e)}}
+}
+
+function typeLabel(t){return t==='university'?'Universidade':t==='college'?'Faculdade':'Escola'}
+function safe(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function safeAttr(s){return safe(s).replace(/'/g,'&#39;')}
+let permissionAsked=false;
+async function askPermissionsOnce(){if(permissionAsked)return;permissionAsked=true;/* A localização é solicitada somente quando o usuário escolhe usar o recurso. */if('Notification'in window&&Notification.permission==='default'){/* pedido fica a cargo do botão, evitando solicitar sem contexto */}}
+async function askNotifications(){if(!('Notification'in window)){alert('Notificações não são suportadas neste navegador.');return}try{const p=await Notification.requestPermission();if(p==='granted'){alert('Notificações ativadas neste navegador.');new Notification('S4 EDU',{body:'Notificações ativadas com sucesso!'})}else{alert('Permissão de notificações não concedida. Você pode alterar isso nas configurações do navegador.')}}catch{alert('Não foi possível solicitar notificações.')}} 
+function exportData(){if(!user)return;const blob=new Blob([JSON.stringify(user,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='meus-dados-s4-edu.json';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url)}
+function deleteAccount(){if(!user)return;if(!confirm('Tem certeza de que deseja excluir a conta e os dados salvos neste navegador? Esta ação não pode ser desfeita.'))return;localStorage.removeItem('s4edu_user');user=null;alert('Dados locais excluídos.');logout()}
+document.addEventListener('DOMContentLoaded',()=>{['quickCity','searchPlace'].forEach(id=>{const el=$(id);if(el)el.addEventListener('keydown',e=>{if(e.key==='Enter')searchCity(id)})});});
+(function init(){const saved=getUser();if(saved){user=saved;if(ageFromDate(user.dob)<13){$('auth').classList.add('hidden');$('blocked').classList.remove('hidden')}else enterApp()}})();
+</script>
+
+<script>
+/* S4 EDU — suporte de instalação multiplataforma (PWA). */
+(function(){
+  let deferredInstallPrompt=null;
+  const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent)&&!window.MSStream;
+  const isStandalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;
+  function makeInstallButton(){
+    if(isStandalone||document.getElementById('s4InstallButton'))return null;
+    const btn=document.createElement('button');btn.id='s4InstallButton';btn.type='button';btn.textContent='＋ Instalar S4 EDU';
+    btn.setAttribute('aria-label','Instalar S4 EDU no dispositivo');
+    btn.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2500;border-radius:999px;padding:12px 17px;box-shadow:0 8px 26px #101c3a35;font-weight:800;display:none';
+    btn.addEventListener('click',async()=>{if(deferredInstallPrompt){deferredInstallPrompt.prompt();try{await deferredInstallPrompt.userChoice}catch(e){}deferredInstallPrompt=null;btn.remove()}else if(isIOS){alert('Para instalar no iPhone ou iPad: abra este site no Safari, toque em Compartilhar e escolha “Adicionar à Tela de Início”.')}else{alert('Para instalar, abra o menu do navegador e escolha “Instalar aplicativo” ou “Adicionar à tela inicial”, se disponível.')}});
+    document.body.appendChild(btn);return btn;
+  }
+  window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();deferredInstallPrompt=event;const btn=makeInstallButton();if(btn)btn.style.display='block'});
+  window.addEventListener('appinstalled',()=>document.getElementById('s4InstallButton')?.remove());
+  window.addEventListener('load',()=>{if('serviceWorker'in navigator&&/^https?:$/.test(location.protocol)){navigator.serviceWorker.register('./sw.js').catch(err=>console.info('S4 EDU: instalação offline indisponível.',err))}if(isIOS&&!isStandalone){const btn=makeInstallButton();if(btn)btn.style.display='block'}});
+})();
+</script>
+
+
+<script>
+/* Mostra a opção de APK apenas em dispositivos Android.
+   Publique o arquivo em /downloads/S4-EDU.apk para ativar o download. */
+(function(){
+  const ua=navigator.userAgent||'';
+  const isAndroid=/Android/i.test(ua);
+  const banner=document.getElementById('s4AndroidApkBanner');
+  const link=document.getElementById('s4AndroidApkLink');
+  if(isAndroid&&banner&&link){
+    banner.style.display='flex';
+    link.addEventListener('click',function(e){
+      if(!link.href||link.href.endsWith('/downloads/S4-EDU.apk')){
+        /* O servidor deve disponibilizar o APK neste caminho. */
+      }
+    });
+  }
+})();
+</script>
+
+<!-- Assistente Miau: suporte rápido do S4 EDU -->
+<button id="miauLauncher" type="button" aria-label="Abrir Assistente Miau" title="Precisa de ajuda? Converse com o Miau" onclick="toggleMiau()">
+  🐈<span class="miau-dot"></span>
+</button>
+<section id="miauPanel" class="hidden" role="dialog" aria-label="Assistente Miau" aria-modal="false">
+  <div class="miau-head">
+    <div class="miau-cat" aria-hidden="true">🐈</div>
+    <div><strong>Assistente Miau</strong><small>Suporte do S4 EDU · online no app</small></div>
+    <button id="miauClose" type="button" onclick="toggleMiau(false)" aria-label="Fechar">✕</button>
+  </div>
+  <div id="miauMessages" aria-live="polite">
+    <div class="miau-msg miau-bot">Miau! 🐾 Oi! Eu sou o Miau, seu assistente do S4 EDU. Posso ajudar com pesquisas, mapa, GPS, favoritos, anotações e outras funções. O que você precisa?</div>
+  </div>
+  <div class="miau-quick">
+    <button class="secondary" type="button" onclick="miauQuick('Como pesquisar escolas?')">🔎 Pesquisar</button>
+    <button class="secondary" type="button" onclick="miauQuick('O mapa não está funcionando')">🗺️ Mapa</button>
+    <button class="secondary" type="button" onclick="miauQuick('Como usar o GPS?')">📍 GPS</button>
+    <button class="secondary" type="button" onclick="miauQuick('Como salvar favoritos?')">⭐ Favoritos</button>
+  </div>
+  <form class="miau-compose" id="miauForm">
+    <input id="miauInput" type="text" maxlength="500" autocomplete="off" placeholder="Escreva sua dúvida..." aria-label="Escreva sua dúvida">
+    <button id="miauSend" type="submit">Enviar</button>
+  </form>
+  <div class="miau-note">O Miau oferece orientações sobre o aplicativo. Não envie senhas ou dados pessoais.</div>
+</section>
+
+<script>
+
+/* Miau: central de ajuda guiada. Para respostas generativas, conecte um backend seguro. */
+function toggleMiau(force){
+  const panel=document.getElementById('miauPanel');
+  if(!panel)return;
+  const shouldOpen=typeof force==='boolean'?force:panel.classList.contains('hidden');
+  panel.classList.toggle('hidden',!shouldOpen);
+  if(shouldOpen)setTimeout(()=>document.getElementById('miauInput')?.focus(),80);
+}
+function miauAddMessage(text,who){
+  const box=document.getElementById('miauMessages');if(!box)return;
+  const msg=document.createElement('div');msg.className='miau-msg '+(who==='user'?'miau-user':'miau-bot');msg.textContent=text;
+  box.appendChild(msg);box.scrollTop=box.scrollHeight;
+}
+function miauQuick(text){miauAddMessage(text,'user');miauReply(text)}
+function miauReply(raw){
+  const q=String(raw||'').toLocaleLowerCase('pt-BR').normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  let answer='';
+  if(/oi|ola|bom dia|boa tarde|boa noite|quem e voce|seu nome/.test(q)){
+    answer='Miau! 🐾 Eu sou o Assistente Miau, o gatinho de suporte do S4 EDU. Estou aqui para explicar como usar o aplicativo.';
+  }else if(/mapa|map|tela branca|404|nao abre|nao carrega|bugad/.test(q)){
+    answer='Vamos cuidar do mapa! 🗺️\\n1. Confira se sua internet está funcionando.\\n2. Atualize a página ou feche e abra o app novamente.\\n3. Confira se o navegador permite carregar conteúdo externo.\\n4. Tente abrir a área “Mapa” novamente.\\nO mapa usa serviços externos e precisa de internet. Se aparecer 404, me diga em qual aparelho e navegador aconteceu.';
+  }else if(/gps|localizacao|localizar|permissao/.test(q)){
+    answer='📍 O GPS é opcional no S4 EDU. Você pode pesquisar digitando o nome da cidade sem ativá-lo. Para usar sua posição, abra a função de localização e permita o acesso quando o navegador perguntar. Confira também se a localização está ligada no aparelho e se o site está em HTTPS.';
+  }else if(/pesquis|escola|faculdade|cidade|instituicao/.test(q)){
+    answer='🔎 Para encontrar instituições: abra “Buscar” ou “Mapa”, digite o nome da cidade, bairro ou localidade e escolha o tipo de ensino. Você não precisa ativar o GPS. Se a busca não encontrar o lugar, confira a escrita ou escolha uma sugestão apresentada pelo app.';
+  }else if(/favorit|estrela|salvar escola/.test(q)){
+    answer='⭐ Para guardar uma instituição, abra os resultados da pesquisa e use a opção de favoritar (ícone de estrela, quando disponível). Depois, consulte a seção “Favoritos” no menu do aplicativo.';
+  }else if(/anotac|nota|escrever/.test(q)){
+    answer='📝 Abra “Anotações” no menu, preencha o título e o conteúdo e toque em “Salvar”. Atenção: nesta versão, as anotações ficam armazenadas no navegador e aparelho usados; elas não sincronizam automaticamente entre dispositivos.';
+  }else if(/document|arquivo|curriculo|currículo/.test(q)){
+    answer='📁 Entre na área de documentos ou currículo pelo menu/perfil. Siga os campos da tela e salve ao terminar. Nesta versão, os dados ficam neste navegador/aparelho. Evite guardar arquivos muito grandes ou informações sensíveis.';
+  }else if(/login|entrar|senha|conta|gmail/.test(q)){
+    answer='👤 Na tela inicial, preencha os dados solicitados para entrar. Se não conseguir, confira se os campos estão corretos e se o navegador permite armazenamento local. Não compartilhe sua senha comigo.';
+  }else if(/avali|estrela|nota da escola/.test(q)){
+    answer='⭐ Quando a avaliação estiver disponível no resultado da instituição, selecione a quantidade de estrelas que deseja atribuir. As avaliações desta versão são opiniões dos usuários e não representam uma classificação oficial da escola.';
+  }else if(/internet|offline|sem conexao/.test(q)){
+    answer='📶 Algumas partes do S4 EDU podem abrir sem conexão, mas pesquisa de instituições, mapa, GPS e serviços de localização precisam de internet. Tente novamente quando estiver conectado.';
+  }else if(/obrigad|valeu/.test(q)){
+    answer='Miau! 😺 Fico feliz em ajudar. Se aparecer outra dúvida, é só me chamar!';
+  }else{
+    answer='Miau! 🐾 Ainda não encontrei uma orientação específica para essa dúvida. Tente me perguntar sobre mapa, GPS, pesquisa de escolas, favoritos, anotações, documentos ou login. Se for um erro, conte a mensagem que apareceu e em qual aparelho aconteceu.';
+  }
+  setTimeout(()=>miauAddMessage(answer,'bot'),260);
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  const form=document.getElementById('miauForm'),input=document.getElementById('miauInput');
+  if(form&&input)form.addEventListener('submit',e=>{e.preventDefault();const value=input.value.trim();if(!value)return;miauAddMessage(value,'user');input.value='';miauReply(value)});
+});
+
+</script>
+</body>
+</html>
